@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "veridion-api"
+version = "0.1.0"
+description = ""
+authors = ["Vlad Nedelcu <nedelcuvd@gmail.com>"]
+license = "Private"
+readme = "README.md"
+packages = [
+	{ include = "api", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.128.0"
+pydantic-settings = "^2.12.0"
+uvicorn = "^0.40.0"
+psycopg2 = "^2.9.11"
+gunicorn = "^24.1.1"
+alembic = "^1.18.1"
+asyncpg = "^0.31.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.14.14"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.alembic]
+
+# path to migration scripts.
+# this is typically a path given in POSIX (e.g. forward slashes)
+# format, relative to the token %(here)s which refers to the location of this
+# ini file
+script_location = "%(here)s/migrations"
+
+# additional paths to be prepended to sys.path. defaults to the current working directory.
+prepend_sys_path = [
+    "."
+]
+
+
+[[tool.alembic.post_write_hooks]]
+name = "ruff"
+type = "module"
+module = "ruff"
+options = "check --fix REVISION_SCRIPT_FILENAME"
+
+#
+# [[tool.alembic.post_write_hooks]]
+# Alternatively, use the exec runner to execute a binary found on your PATH
+# name = "ruff"
+# type = "exec"
+# executable = "ruff"
+# options = "check --fix REVISION_SCRIPT_FILENAME"
+
