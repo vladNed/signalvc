@@ -1,6 +1,5 @@
 import fastapi
 
-from api.conf import settings
 app = fastapi.FastAPI()
 
 

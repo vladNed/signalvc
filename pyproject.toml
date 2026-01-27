@@ -1,12 +1,13 @@
 [tool.poetry]
-name = "veridion-api"
+name = "signalvc-api"
 version = "0.1.0"
 description = ""
 authors = ["Vlad Nedelcu <nedelcuvd@gmail.com>"]
 license = "Private"
 readme = "README.md"
 packages = [
-	{ include = "api", from = "src" }
+	{ include = "api", from = "src" },
+    { include = "cli", from = "src" },
 ]
 
 [tool.poetry.dependencies]
@@ -22,6 +23,11 @@ asyncpg = "^0.31.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.14.14"
+
+
+[tool.poetry.group.cli.dependencies]
+rich = "^14.3.1"
+pandas = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -56,3 +62,5 @@ options = "check --fix REVISION_SCRIPT_FILENAME"
 # executable = "ruff"
 # options = "check --fix REVISION_SCRIPT_FILENAME"
 
+[tool.poetry.scripts]
+vc = "cli.main:main"
