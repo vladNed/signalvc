@@ -27,5 +27,11 @@ class ResponseItem(BaseModel):
     operational_name: str
     description: str
     country_name: str
-    target_markets: Annotated[list[str], BeforeValidator(validators.parse_target_markets)]
-    relevance_score: Annotated[float, AfterValidator(validators.round_score)]
+    target_markets: Annotated[
+        list[str],
+        BeforeValidator(validators.parse_target_markets),
+    ]
+    relevance_score: Annotated[
+        float,
+        AfterValidator(validators.round_score),
+    ]

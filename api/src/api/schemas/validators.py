@@ -9,7 +9,7 @@ def parse_target_markets(val: str) -> str:
     try:
         return json.loads(val)
     except json.JSONDecodeError:
-        logger.warning(f"Failed to parse target markets: {val}. Defaulting to empty list.")
+        logger.warning("Failed to parse target markets: %s. Defaulting to empty.", val)
         return json.dumps([])
 
 

@@ -19,7 +19,10 @@ router = fastapi.APIRouter(tags=["dev"])
     response_model=list[schemas.feed.ResponseItem],
     responses={
         400: {"description": "Bad Request", "model": schemas.exceptions.BadRequest},
-        500: {"description": "Internal Server Error", "model": schemas.exceptions.BadRequest},
+        500: {
+            "description": "Internal Server Error",
+            "model": schemas.exceptions.BadRequest,
+        },
     },
 )
 async def get_swipe_feed(
@@ -67,7 +70,12 @@ async def get_swipe_feed(
         # Validate weights sum to reasonable value
         total_weight = sum(
             filter(
-                None, [request.weights.countries, request.weights.business_categories, request.weights.target_markets]
+                None,
+                [
+                    request.weights.countries,
+                    request.weights.business_categories,
+                    request.weights.target_markets,
+                ],
             )
         )
 
@@ -93,6 +101,8 @@ async def get_swipe_feed(
             target_markets=request.filters.target_markets,
             limit=limit,
         )
+        elapsed_time_db = time.time() - start_time
+        logger.info("Database query completed. time: %s", round(elapsed_time_db, 4))
 
         response_items = [schemas.feed.ResponseItem(**row) for row in results]
 
@@ -114,11 +124,17 @@ async def get_swipe_feed(
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error: {e}", exc_info=True)
-        raise fastapi.HTTPException(status_code=500, detail="An error occurred while fetching startups")
+        raise fastapi.HTTPException(
+            status_code=500,
+            detail="An error occurred while fetching startups",
+        )
 
     except fastapi.HTTPException:
         raise  # Re-raise HTTP exceptions as is
 
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)
-        raise fastapi.HTTPException(status_code=500, detail="An unexpected error occurred")
+        raise fastapi.HTTPException(
+            status_code=500,
+            detail="An unexpected error occurred",
+        )

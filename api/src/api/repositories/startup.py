@@ -75,5 +75,6 @@ class StartupRepository:
             target_markets_list,
             limit,
         )
+        print("Executed query:", query)
 
         return [dict(row) for row in result]
