@@ -1,30 +1,7 @@
 "use client";
 
-import * as React from "react";
-import { useEffect, useState } from "react";
-import { Trash2, Save, Loader2 } from "lucide-react";
-import { COUNTRIES } from "@/consts/countries";
-import { TARGET_MARKETS } from "@/consts/target-markets";
-import { useGetFeedMutation } from "@/lib/features/api/recoApi";
 import { Badge } from "@/components/ui/badge";
-import {
-	saveConfig,
-	getAllConfigs,
-	deleteDatabase,
-	type RecoConfig,
-} from "@/lib/db";
-import { MultiSelect, type Option } from "@/components/ui/multi-select";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import {
 	Card,
 	CardContent,
@@ -33,7 +10,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
 	Dialog,
 	DialogContent,
@@ -43,6 +19,29 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { MultiSelect, type Option } from "@/components/ui/multi-select";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
+import { COUNTRIES } from "@/consts/countries";
+import { TARGET_MARKETS } from "@/consts/target-markets";
+import {
+	deleteDatabase,
+	getAllConfigs,
+	saveConfig,
+	type RecoConfig,
+} from "@/lib/db";
+import { useGetFeedMutation } from "@/lib/features/api/recoApi";
+import { Loader2, Save, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 // --- Constants ---
 
@@ -370,40 +369,10 @@ export default function ConfigPage() {
 											</SelectContent>
 										</Select>
 									</div>
-
-									{(country === "United States" ||
-										country === "US" ||
-										country === "USA") && (
-										<div className="space-y-2">
-											<Label>Region (State)</Label>
-											<Select value={region} onValueChange={setRegion}>
-												<SelectTrigger>
-													<SelectValue placeholder="Select state" />
-												</SelectTrigger>
-												<SelectContent className="max-h-[300px]">
-													{US_STATES.map((state) => (
-														<SelectItem key={state} value={state}>
-															{state}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-										</div>
-									)}
 								</div>
 
 								{/* Multiple Selects */}
 								<div className="space-y-4">
-									<div className="space-y-2">
-										<Label>Domains</Label>
-										<MultiSelect
-											placeholder="Select domains..."
-											options={domainOptions}
-											selected={domains}
-											onChange={setDomains}
-										/>
-									</div>
-
 									<div className="space-y-2">
 										<Label>Business Categories</Label>
 										<MultiSelect
