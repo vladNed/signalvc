@@ -14,7 +14,14 @@ logger = logging.getLogger("uvicorn")
 router = fastapi.APIRouter(tags=["dev"])
 
 
-@router.post("/swipe/dev", response_model=list[schemas.feed.ResponseItem])
+@router.post(
+    "/swipe/dev",
+    response_model=list[schemas.feed.ResponseItem],
+    responses={
+        400: {"description": "Bad Request", "model": schemas.exceptions.BadRequest},
+        500: {"description": "Internal Server Error", "model": schemas.exceptions.BadRequest},
+    },
+)
 async def get_swipe_feed(
     request: schemas.feed.Request,
     db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
@@ -50,8 +57,7 @@ async def get_swipe_feed(
             "countries": 0.3,
             "business_categories": 0.4,
             "target_markets": 0.3
-          },
-          "min_relevance_score": 0.5
+          }
         }
         ```
     """
@@ -73,7 +79,6 @@ async def get_swipe_feed(
             extra={
                 "filters": request.filters.model_dump(),
                 "weights": request.weights.model_dump(),
-                "min_relevance_score": request.min_relevance_score,
                 "limit": limit,
             },
         )
@@ -86,7 +91,6 @@ async def get_swipe_feed(
             countries=request.filters.countries,
             categories=request.filters.business_categories,
             target_markets=request.filters.target_markets,
-            min_relevance_score=request.min_relevance_score,
             limit=limit,
         )
 
@@ -111,6 +115,9 @@ async def get_swipe_feed(
     except asyncpg.PostgresError as e:
         logger.error(f"Database error: {e}", exc_info=True)
         raise fastapi.HTTPException(status_code=500, detail="An error occurred while fetching startups")
+
+    except fastapi.HTTPException:
+        raise  # Re-raise HTTP exceptions as is
 
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)

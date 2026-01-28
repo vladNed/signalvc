@@ -20,7 +20,6 @@ class StartupRepository:
         countries: list[str] | None,
         categories: list[str] | None,
         target_markets: list[str] | None,
-        min_relevance_score: float,
         limit: int,
     ) -> list[dict[str, Any]]:
         """
@@ -40,43 +39,37 @@ class StartupRepository:
             List of startup records with relevance scores
         """
         query = """
-        WITH scored AS (
-          SELECT
+        SELECT
             s.id,
             s.operational_name,
             s.description,
             s.country_name,
             s.target_markets,
+            s.business_category,
             (
-              -- Calculate weighted relevance score
-              $1::float * (s.country_name = ANY($5::text[]))::int +
-              $2::float * (s.business_category = ANY($6::text[]))::int +
-              $3::float * (s.target_markets ?| $7::text[])::int
+              $1::float * (s.country_name = ANY($4::text[]))::int +
+              $2::float * (s.business_category = ANY($5::text[]))::int +
+              $3::float * (s.target_markets ?| $6::text[])::int
             ) AS relevance_score
-          FROM startup s
-        ),
-        top_relevance AS (
-          SELECT *
-          FROM scored
-          WHERE relevance_score >= $4::float  -- Use min_relevance_score parameter
-          LIMIT $8::int
+        FROM startup s
+        WHERE (
+            (s.country_name is not null and s.country_name = ANY($4::text[])) AND
+            (s.target_markets ?| $6::text[]) AND
+            (s.business_category = ANY($5::text[]))
         )
-        SELECT *
-        FROM top_relevance
-        ORDER BY relevance_score DESC;
+        ORDER BY relevance_score DESC
+        LIMIT $7::int;
         """
 
         # Convert None to empty lists for PostgreSQL array parameters
         countries_list = countries or []
         categories_list = categories or []
         target_markets_list = target_markets or []
-
         result = await self.db_conn.fetch(
             query,
             country_weight,
             category_weight,
             target_markets_weight,
-            min_relevance_score,
             countries_list,
             categories_list,
             target_markets_list,

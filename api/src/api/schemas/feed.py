@@ -20,7 +20,6 @@ class RequestWeights(BaseModel):
 class Request(BaseModel):
     filters: RequestFilters
     weights: RequestWeights
-    min_relevance_score: float
 
 
 class ResponseItem(BaseModel):

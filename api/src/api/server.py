@@ -25,7 +25,12 @@ async def lifespan(app: fastapi.FastAPI):
     await app.state.pool.close()
 
 
-app = fastapi.FastAPI(lifespan=lifespan)
+app = fastapi.FastAPI(
+    title="Signal VC API",
+    version="0.1.0",
+    description="API for Signal VC platform",
+    lifespan=lifespan,
+)
 
 app.include_router(feed.router, prefix="/api/v1/feed")
 
