@@ -39,24 +39,28 @@ class StartupRepository:
             List of startup records with relevance scores
         """
         query = """
-        SELECT
-            s.id,
-            s.operational_name,
-            s.description,
-            s.country_name,
-            s.target_markets,
-            s.business_category,
-            (
-              $1::float * (s.country_name = ANY($4::text[]))::int +
-              $2::float * (s.business_category = ANY($5::text[]))::int +
-              $3::float * (s.target_markets ?| $6::text[])::int
-            ) AS relevance_score
-        FROM startup s
-        WHERE (
-            (s.country_name is not null and s.country_name = ANY($4::text[])) AND
-            (s.target_markets ?| $6::text[]) AND
-            (s.business_category = ANY($5::text[]))
+        WITH filtered AS (
+            SELECT *
+            FROM startup s
+            WHERE
+                (s.country_name is not null and s.country_name = ANY($4::text[])) OR
+                (s.target_markets ?| $6::text[]) OR
+                (s.business_category = ANY($5::text[]))
+            LIMIT 200
         )
+        SELECT
+            id,
+            operational_name,
+            description,
+            country_name,
+            target_markets,
+            business_category,
+            (
+              $1::float * (country_name = ANY($4::text[]))::int +
+              $2::float * (business_category = ANY($5::text[]))::int +
+              $3::float * (target_markets ?| $6::text[])::int
+            ) AS relevance_score
+        FROM filtered
         ORDER BY relevance_score DESC
         LIMIT $7::int;
         """
