@@ -1,9 +1,9 @@
-import pathlib
-from rich import console, status, prompt
-import pandas as pd
-import json
 import argparse
+import json
+import pathlib
 
+import pandas as pd
+from rich import console, prompt, status
 from sqlalchemy import create_engine
 
 from api.conf import settings
@@ -55,15 +55,28 @@ def main():
     with status.Status(
         f"Searching for [bold blue]{args.table}[/bold blue] data file...", console=log
     ):
-        data_file = root / "data" / f"{args.table}.parquet"
-        if not data_file.exists():
+        parquet_file = root / "data" / f"{args.table}.parquet"
+        csv_file = root / "data" / f"{args.table}.csv"
+
+        if parquet_file.exists():
+            data_file = parquet_file
+            data_format = "parquet"
+        elif csv_file.exists():
+            data_file = csv_file
+            data_format = "csv"
+        else:
             log.print(
-                f"[bold red]Error:[/bold red] Data file [bold]{data_file}[/bold] does not exist."
+                f"[bold red]Error:[/bold red] Data file not found. Expected one of:\n"
+                f"  - {parquet_file}\n"
+                f"  - {csv_file}"
             )
             return
 
     with status.Status("Reading file...", console=log):
-        df = pd.read_parquet(data_file, engine="pyarrow")
+        if data_format == "parquet":
+            df = pd.read_parquet(data_file, engine="pyarrow")
+        else:
+            df = pd.read_csv(data_file)
 
     log.print("▶ Loaded data:")
     log.print(f"  - Rows: {len(df)}")

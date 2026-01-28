@@ -11,5 +11,4 @@ CREATE INDEX IF NOT EXISTS idx_investor_country ON investor(country_name);
 
 CREATE INDEX IF NOT EXISTS idx_investor_domain ON investor(domain);
 
-ALTER TABLE
-    investor ENABLE ROW LEVEL SECURITY;
+ALTER TABLE investor ENABLE ROW LEVEL SECURITY;

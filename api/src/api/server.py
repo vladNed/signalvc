@@ -1,10 +1,12 @@
-import fastapi
-import asyncpg
 import logging
 
-from api.routes import feed
-from api.conf import settings
+import asyncpg
+import fastapi
 from fastapi.concurrency import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
+
+from api.conf import settings
+from api.routes import feed
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -33,6 +35,12 @@ app = fastapi.FastAPI(
 )
 
 app.include_router(feed.router, prefix="/api/v1/feed")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+)
 
 
 @app.get("/health")
