@@ -43,10 +43,10 @@ class StartupRepository:
             SELECT *
             FROM startup s
             WHERE
-                (s.country_name is not null and s.country_name = ANY($4::text[])) OR
                 (s.target_markets ?| $6::text[]) OR
-                (s.business_category = ANY($5::text[]))
-            LIMIT 200
+                (s.business_category = ANY($5::text[])) OR
+                (s.country_name is not null and s.country_name = ANY($4::text[]))
+            LIMIT 3000
         )
         SELECT
             id,

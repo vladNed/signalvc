@@ -22,10 +22,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      APP_MODULE: api.server:app
+      APP_MODULE: ${APP_MODULE:-api.server:app}
       APP_HOST: 0.0.0.0
       APP_PORT: 8080
-      APP_LOG_LEVEL: ${APP_LOG_LEVEL:-info}
+      APP_LOG_LEVEL: ${APP_LOG_LEVEL:-debug}
       POSTGRES__USER: ${POSTGRES__USER}
       POSTGRES__PASSWORD: ${POSTGRES__PASSWORD}
       POSTGRES__DB: ${POSTGRES__DB}
