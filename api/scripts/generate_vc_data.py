@@ -109,18 +109,137 @@ def generate_vc_data():
     out_dir = "data"
     os.makedirs(out_dir, exist_ok=True)
 
-    df = pd.DataFrame(data)
+    def parse_hq(hq: str):
+        """Parse an HQ Location like 'City, ST, COUNTRY' into region and country.
 
-    csv_path = os.path.join(out_dir, "vc_table_100.csv")
-    df.to_csv(csv_path, index=False)
-    print(f"CSV file saved to {csv_path}")
+        - region_name: everything before the last comma
+        - country_name: last token after the final comma
+        """
+        if not hq:
+            return "", ""
 
-    parquet_path = os.path.join(out_dir, "vc_table_100.parquet")
-    try:
-        df.to_parquet(parquet_path, index=False)
-        print(f"Parquet file saved to {parquet_path}")
-    except Exception as e:
-        print(f"Could not write parquet file (missing engine?). Error: {e}\nCSV is available at {csv_path}")
+        # If there are multiple locations like 'London, UK & Geneva, CH', take the first
+        first_loc = hq.split("&")[0].strip()
+        parts = [p.strip() for p in first_loc.split(",") if p.strip()]
+        if not parts:
+            return "", ""
+
+        country_token = parts[-1]
+
+        # Map some common country abbreviations to full country names
+        COUNTRY_MAP = {
+            "USA": "United States",
+            "US": "United States",
+            "U.S.": "United States",
+            "U.S.A.": "United States",
+            "UK": "United Kingdom",
+            "GB": "United Kingdom",
+            "CH": "Switzerland",
+            "DE": "Germany",
+            "FR": "France",
+            "AT": "Austria",
+            "SE": "Sweden",
+            "NL": "Netherlands",
+        }
+
+        country = COUNTRY_MAP.get(country_token, country_token)
+
+        # US postal code to full state name map
+        US_STATES = {
+            "AL": "Alabama",
+            "AK": "Alaska",
+            "AZ": "Arizona",
+            "AR": "Arkansas",
+            "CA": "California",
+            "CO": "Colorado",
+            "CT": "Connecticut",
+            "DE": "Delaware",
+            "FL": "Florida",
+            "GA": "Georgia",
+            "HI": "Hawaii",
+            "ID": "Idaho",
+            "IL": "Illinois",
+            "IN": "Indiana",
+            "IA": "Iowa",
+            "KS": "Kansas",
+            "KY": "Kentucky",
+            "LA": "Louisiana",
+            "ME": "Maine",
+            "MD": "Maryland",
+            "MA": "Massachusetts",
+            "MI": "Michigan",
+            "MN": "Minnesota",
+            "MS": "Mississippi",
+            "MO": "Missouri",
+            "MT": "Montana",
+            "NE": "Nebraska",
+            "NV": "Nevada",
+            "NH": "New Hampshire",
+            "NJ": "New Jersey",
+            "NM": "New Mexico",
+            "NY": "New York",
+            "NC": "North Carolina",
+            "ND": "North Dakota",
+            "OH": "Ohio",
+            "OK": "Oklahoma",
+            "OR": "Oregon",
+            "PA": "Pennsylvania",
+            "RI": "Rhode Island",
+            "SC": "South Carolina",
+            "SD": "South Dakota",
+            "TN": "Tennessee",
+            "TX": "Texas",
+            "UT": "Utah",
+            "VT": "Vermont",
+            "VA": "Virginia",
+            "WA": "Washington",
+            "WV": "West Virginia",
+            "WI": "Wisconsin",
+            "WY": "Wyoming",
+            "DC": "District of Columbia",
+        }
+
+        region = ""
+
+        # If the country resolves to United States, try to find a state code in the
+        # tokens before the country token and map it to the full state name.
+        if country == "United States":
+            # search backwards in the tokens before the country token for a state abbrev
+            for token in reversed(parts[:-1]):
+                up = token.upper()
+                # strip common 'US state' trailing periods (e.g., 'N.J.' -> 'NJ')
+                up = up.replace(".", "")
+                if up in US_STATES:
+                    region = US_STATES[up]
+                    break
+                # if token already is a full state name, use it
+                if token in US_STATES.values():
+                    region = token
+                    break
+
+        # For non-US entries we avoid returning a city as region (user requested state/region only).
+        # So region remains empty unless a US state was found above.
+
+        return region, country
+
+    # Normalize data to required columns: name, domain, country_name, region_name
+    normalized = []
+    for item in data:
+        region, country = parse_hq(item.get("HQ Location", ""))
+        normalized.append(
+            {
+                "name": item.get("Name", ""),
+                "domain": item.get("Web domain name", ""),
+                "country_name": country,
+                "region_name": region,
+            }
+        )
+
+    df = pd.DataFrame(normalized)
+
+    parquet_path = os.path.join(out_dir, "investor.parquet")
+    df.to_parquet(parquet_path, index=False)
+    print(f"Parquet file saved to {parquet_path}")
 
 
 if __name__ == "__main__":
