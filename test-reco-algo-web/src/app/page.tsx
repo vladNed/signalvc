@@ -120,10 +120,6 @@ const BUSINESS_CATEGORIES = [
 	"Data Solutions",
 	"Hosting & Cloud Infrastructure Providers",
 	"Tech Companies",
-	"Consulting Firms",
-	"Agencies",
-	"Startups",
-	"Enterprise",
 ];
 
 // Helper to map strings to Options
