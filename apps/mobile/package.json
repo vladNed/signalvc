@@ -1,0 +1,25 @@
+{
+	"name": "@signalvc/mobile",
+	"version": "1.0.0",
+	"main": "index.ts",
+	"scripts": {
+		"dev": "expo start",
+		"build": "expo export",
+		"lint": "eslint .",
+		"typecheck": "tsc -p tsconfig.json --noEmit"
+	},
+	"dependencies": {
+		"expo": "~54.0.33",
+		"expo-status-bar": "~3.0.9",
+		"react": "19.1.0",
+		"react-native": "0.81.5"
+	},
+	"devDependencies": {
+		"@expo/metro-config": "^54.0.14",
+		"@signalvc/eslint-config": "workspace:*",
+		"@types/react": "~19.1.0",
+		"eslint": "^9.0.0",
+		"typescript": "~5.9.2"
+	},
+	"private": true
+}
