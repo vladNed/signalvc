@@ -19,6 +19,10 @@
   - `dev` is persistent and not cached.
   - `build` depends on upstream builds and caches `dist/**`, `.next/**`, `build/**`.
   - `lint`, `typecheck`, `test` depend on upstream tasks and do not cache outputs.
+- Dev workflow notes:
+  - Root `pnpm dev` (Turbo) starts every `dev` script in parallel; Expo then lacks a TTY so keypress shortcuts (e.g. `i` for iOS) don't work.
+  - For interactive servers, run per-app: `pnpm --filter @signalvc/mobile dev` or `pnpm --filter @signalvc/web dev` in separate terminals.
+  - Use Turbo for non-interactive, fan-out tasks (`pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`).
 
 ## Linting & Formatting
 
@@ -37,3 +41,7 @@
 - No shared `tsconfig.base.json` at this time.
 - No `helloDomain()` wiring in apps.
 - `api/` is not included in Turbo yet.
+
+## LLM Collaboration Rule
+
+- When a discussion with the LLM produces a clearly relevant or actionable conclusion, the LLM must ask the user whether to capture that idea in `AGENTS.md` before proceeding.
