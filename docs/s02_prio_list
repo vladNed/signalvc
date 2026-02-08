@@ -1,0 +1,130 @@
+S02 - Initial Product Feature Development Plan
+Jan ‘26 - Christian, Vlad, Cosmin
+
+Anonymous swipe loop (instant relevance, zero friction) - Ship a no-account-first (anon) experience that proves instant value by letting VCs act on trends immediately (Stage 1: Relevance). The goal is to trigger FOMO + peer pressure before asking for effort, while still preserving actions if they convert in-session.
+Anonymous user actions:
+Swipe Up: User Believes Startup Increases In Valuation
+Swipe Down: User Believes Startup Decreases In Valuation
+Swipe Left: Ignore
+Swipe Right: Invest
+Unlimited Up/Downs And Limited Left/Right
+ 
+Store Session And Move To Account If The User Signs Up: Any actions taken will be saved if the user creates an account during the same session.
+Product features needed: gesture handling + action throttling (limited Left/Right), session storage (anon state), and signup “migration” that replays saved actions into the new account.
+
+Behavior rationale: Up/Down is the high-frequency “sentiment engine” (Bull/Bear + later PPS prediction accuracy), while Left/Right is high-signal portfolio intent and must feel scarcer. It is much easier to hook a user based on their own “quick” thinking actions (up/down) that have no real impact to their potential future portfolio.
+
+Data
+Reel Info Card (anon) = hype-first snapshot - The reel must show niche + network-specific hype immediately so the user understands “what’s hot” and “who else cares” at a glance. This is the primary surface that converts scrolling into swiping.
+Reel Info Card with anon, data required:
+ Bull/Bear score
+ Peer Score
+ MRR
+ Industry (+ Niche?)
+ Ticket size (Valuation)
+ HQ Position (geography)
+ Leaderboard Preview
+ Founders ??
+Product features needed: a compact card layout optimized for 1–2 second reads, plus a clear hierarchy where Peer Score and Bull/Bear score visually dominate (trend-driven persona).
+
+
+Why this works: VCs are forced to move fast; showing social proof (scores + leaderboard preview) creates “me vs them” curiosity without requiring deep research.
+
+
+
+Reel Info Card (account) = same surface, stronger meaning - Keep the reel lightweight, but once logged in, every score should feel like it impacts status and competition (Stage 2: Interactions). The same data becomes “personal” because it ties into the user’s portfolio, reputation, and future leaderboard rank.
+Reel Info Card with account, data required:
+ Bull/Bear Score
+ Peer Score
+ Industry (+ Niche?)
+ Ticket size (Valuation)
+ HQ Position (geography)
+ Leaderboard Preview
+ Founders ??
+Product features needed: account-aware personalization logic behind the scenes (without changing the fields) so the reel ordering + leaderboard preview reflect “my niche vs theirs.” -> Essentially, a recommendation engine.
+
+
+Key principle: keep the UX simple, but make the implications competitive.
+
+Portfolio Menu Info Card (deeper context + competitive intel) - Once the VC has a portfolio, the app must shift from “swipe” to “investigate.” This card is where we provide deeper understanding while still keeping it skimmable and rivalry-driven.
+Portfolio Menu Info Card, data required:
+ Peer Score
+ Industry (+ Niche?)
+ Ticket Size
+ Founders
+ Total Revenue
+ Investors
+ Team Size
+ HQ Position (geography)
+ Sentiment over time for startup
+ Leaderboard
+Product features needed: portfolio screen navigation, startup detail drilldown, and a simple sentiment-over-time visualization that makes momentum obvious. -> For the long term think of the sentiment timeline
+
+
+Why this matters: “relationships defined market intelligence” only works if the user can quickly see competition (Investors + Leaderboard) and trend direction (Sentiment over time).
+
+Startup Card (swipe-first presentation) - Define the minimal startup “unit” that powers the reel: fast, number-led, trend-aware, and consistent with the hype metrics.
+Startup Card:
+ Leaderboard Card
+Product features needed: card component system that contains score badges, and a clear path into the info card/portfolio card. -> optimized for quick understanding (all the context required to make quick decisions <<up/down>>)
+
+
+
+Sentiment over time (foundation for velocity + notifications later) - Store and display time-based activity so the product can evolve into “velocity warnings” and market-dynamics notifications (Stage 3), even if notifications are not shipped yet.
+
+Recommendation Engine
+Relevant Startup Recommandations Keeps The User Engaged - Each startup will be indexed based on a set of data points (outlined below) relative to the interest of each individual VC. Based on the relevance score, they will be served in the feeds of these VCs.
+
+Relevance Score = w1 * IndustryMatch
+                + w2 * TicketSizeMatch
+                + w3 * GeographyMatch
+                + w4 * PeerScore
+                + w5 * BullBearScore
+                + w7 * MRRGrowth
+
+
+Exp: grography_score = w - (distance_km / max_distance_threshold)
+I.e. max_distance_threshold = 4000km
+
+A max distance threshold is required as the closer in proximity a startup’s HQ is to a VC it assumes a higher degree of trust. (i.e. a VC from Germany will have little to no interest in the India’s startup ecosystem)
+
+Product features needed: scoring service + weights config, distance calculation (HQ Position), and feed generation that blends “personal fit” with “market heat.” -> i.e. relevance score with bull/bear scores.
+
+
+Outcome goal: the user should feel both “this matches me” and “others are moving on this,” which is the exact hype loop the product is built on.
+
+Needed Data
+
+Startup Table:
+Name
+Team Size
+Description
+Industry
+Valuation
+HQ Position
+Founders (just names)
+Investors (FK)
+
+Investors Table:
+Name
+Web domain name
+HQ Location
+
+Investors Portfolio Table:
+Investor ID
+Startup ID
+Initial startup valuation (entry)
+Current startup valuation (actual)
+Entry Ticket size
+Current ticket size
+
+Deductible data by us, from the data above:
+
+Personal Performance Score: Derived from the VC’s actual portfolio 
+PPS = ((Vt2 - Vt1) / Vt1) * w1 + ((Tt2 - Tt1) / Tt1) * w2
+Peer Score
+PS = (no_startup_investors / total_industry_investors)
+Note: we can add weights to investors that this industry is their main industry and will affect the total_industry_investors
+Leaderboard:
+Made based on personal performance score
+

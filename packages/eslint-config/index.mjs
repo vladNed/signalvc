@@ -48,6 +48,18 @@ export const baseConfig = ({
         : {}),
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": ["warn", { args: "after-used", argsIgnorePattern: "^_" }],
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/features/*/*", "@/entities/*/*"],
+              message:
+                "Private internal access. Please import from the module's public 'index.ts' instead.",
+            },
+          ],
+        },
+      ],
     },
   },
 ];
