@@ -1,0 +1,25 @@
+{
+  "name": "@signalvc/ui",
+  "version": "0.0.0",
+  "sideEffects": false,
+  "exports": {
+    "./package.json": "./package.json",
+    "./src/components/*": "./src/components/*",
+    "./tailwind.config": "./tailwind.config.ts",
+    "./src/lib/utils": "./src/lib/utils.ts"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.1"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3",
+    "nativewind": "^4.0.1"
+  }
+}

@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@signalvc/ui/*": ["../../packages/ui/*"]
     }
   },
   "include": [
