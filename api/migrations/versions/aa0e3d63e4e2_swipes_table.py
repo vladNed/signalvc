@@ -29,3 +29,4 @@ def downgrade() -> None:
     """Downgrade schema."""
     op.execute("DROP TABLE IF EXISTS swipes;")
     op.execute("DROP TYPE IF EXISTS swipe_type;")
+    op.execute("DROP TABLE IF EXISTS swipe_stats;")
