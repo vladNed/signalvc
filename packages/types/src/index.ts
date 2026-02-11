@@ -1,1 +1,1 @@
-export const helloTypes = () => "hello from types";
+export type { AuthResult, AuthSession, AuthUser, OAuthProvider } from "./auth";

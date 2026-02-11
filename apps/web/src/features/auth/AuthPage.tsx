@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@signalvc/ui/src/components/Button/index.web";
 import { Input } from "@signalvc/ui/src/components/Input/index.web";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useLogin } from "./hooks/useLogin";
 
 export default function AuthPage() {
+  const router = useRouter();
+  const { signInWithPassword, signInWithOAuth, loading, error } = useLogin();
+
   const [step, setStep] = useState<"email" | "password">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (step === "email" && email) {
-      // Mock validation
       setStep("password");
-    } else if (step === "password" && password) {
-      console.log("Login with:", email, password);
+      return;
+    }
+
+    if (step === "password" && password) {
+      const success = await signInWithPassword(email, password);
+      if (success) {
+        router.push("/");
+      }
     }
   };
 
@@ -32,7 +42,7 @@ export default function AuthPage() {
               placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={step === "password"}
+              disabled={step === "password" || loading}
               className="bg-black border-zinc-800"
             />
             {step === "password" && (
@@ -41,12 +51,14 @@ export default function AuthPage() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
                 className="bg-black border-zinc-800 animate-in fade-in slide-in-from-top-2"
               />
             )}
           </div>
-          <Button className="w-full" onClick={handleContinue}>
-            {step === "email" ? "Continue with Email" : "Sign In"}
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <Button className="w-full" onClick={handleContinue} disabled={loading}>
+            {loading ? "Loading..." : step === "email" ? "Continue with Email" : "Sign In"}
           </Button>
         </div>
         <div className="relative">
@@ -58,8 +70,20 @@ export default function AuthPage() {
           </div>
         </div>
         <div className="grid gap-2">
-          <Button variant="google" label="Google" className="w-full" />
-          <Button variant="apple" label="Apple" className="w-full" />
+          <Button
+            variant="google"
+            label="Google"
+            className="w-full"
+            onClick={() => signInWithOAuth("google")}
+            disabled={loading}
+          />
+          <Button
+            variant="apple"
+            label="Apple"
+            className="w-full"
+            onClick={() => signInWithOAuth("apple")}
+            disabled={loading}
+          />
         </div>
       </div>
     </div>

@@ -9,10 +9,13 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@signalvc/types": "workspace:*",
+    "@signalvc/ui": "workspace:*",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.95.3",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "@signalvc/ui": "workspace:*"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@signalvc/eslint-config": "workspace:*",

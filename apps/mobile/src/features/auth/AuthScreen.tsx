@@ -1,19 +1,30 @@
 /// <reference types="nativewind/types" />
-import React, { useState } from "react";
-import { View, Text, SafeAreaView } from "react-native";
 import { Button } from "@signalvc/ui/src/components/Button/index";
 import { Input } from "@signalvc/ui/src/components/Input/index";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { SafeAreaView, Text, View } from "react-native";
+import { useLogin } from "./hooks/useLogin";
 
 export default function AuthScreen() {
+  const router = useRouter();
+  const { signInWithPassword, signInWithOAuth, loading, error } = useLogin();
+
   const [step, setStep] = useState<"email" | "password">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (step === "email" && email) {
       setStep("password");
-    } else if (step === "password" && password) {
-      console.log("Login with:", email, password);
+      return;
+    }
+
+    if (step === "password" && password) {
+      const success = await signInWithPassword(email, password);
+      if (success) {
+        router.replace("/");
+      }
     }
   };
 
@@ -36,6 +47,7 @@ export default function AuthScreen() {
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
+                editable={step !== "password" && !loading}
                 className="bg-input text-foreground border-border"
                 placeholderTextColor="#a1a1aa"
               />
@@ -45,14 +57,17 @@ export default function AuthScreen() {
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
+                  editable={!loading}
                   className="bg-input text-foreground border-border"
                   placeholderTextColor="#a1a1aa"
                 />
               )}
             </View>
+            {error && <Text className="text-sm text-red-500">{error}</Text>}
             <Button
               onPress={handleContinue}
-              label={step === "email" ? "Continue with Email" : "Sign In"}
+              disabled={loading}
+              label={loading ? "Loading..." : step === "email" ? "Continue with Email" : "Sign In"}
             />
           </View>
 
@@ -68,8 +83,18 @@ export default function AuthScreen() {
           </View>
 
           <View className="gap-y-2">
-            <Button variant="google" label="Google" />
-            <Button variant="apple" label="Apple" />
+            <Button
+              variant="google"
+              label="Google"
+              onPress={() => signInWithOAuth("google")}
+              disabled={loading}
+            />
+            <Button
+              variant="apple"
+              label="Apple"
+              onPress={() => signInWithOAuth("apple")}
+              disabled={loading}
+            />
           </View>
         </View>
       </View>
