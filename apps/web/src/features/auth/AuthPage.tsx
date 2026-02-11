@@ -43,7 +43,7 @@ export default function AuthPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={step === "password" || loading}
-              className="bg-black border-zinc-800"
+              className="bg-input border-border"
             />
             {step === "password" && (
               <Input
@@ -52,7 +52,7 @@ export default function AuthPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
-                className="bg-black border-zinc-800 animate-in fade-in slide-in-from-top-2"
+                className="bg-input border-border animate-in fade-in slide-in-from-top-2"
               />
             )}
           </div>
@@ -63,7 +63,7 @@ export default function AuthPage() {
         </div>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-zinc-800" />
+            <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-gray-400">Or continue with</span>
