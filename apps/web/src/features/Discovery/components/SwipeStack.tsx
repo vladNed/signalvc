@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { Startup } from "../models/startup";
-import { StartupCard } from "./StartupCard";
-import type { SwipeDirection } from "../hooks/useSwipeGesture";
+import type { SwipeDirection, Startup } from "@signalvc/types";
+import { StartupCard } from "@signalvc/ui/src/components/StartupCard/index.web";
 
 interface SwipeStackProps {
   startups: Startup[];
