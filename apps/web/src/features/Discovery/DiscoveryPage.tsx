@@ -1,20 +1,17 @@
 "use client";
 
 import { BriefcaseBusiness, House, User } from "lucide-react";
-import { SwipeStack } from "../components/SwipeStack";
-import { MOCK_STARTUPS } from "../consts/mockStartups";
+import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
+import { MOCK_STARTUPS } from "./consts/mockStartups";
 
-export function DiscoveryPage() {
+export default function DiscoveryPage() {
   return (
     <div className="h-screen text-white bg-linear-to-b from-[#000A2E] to-[#010411]">
       <div className="py-10 h-full ">
         <div className="max-w-120 mx-auto  h-full grid grid-rows-12">
-          {/* Card */}
           <div className="row-span-11">
             <SwipeStack startups={MOCK_STARTUPS} />
           </div>
-
-          {/* Footer */}
           <div className="row-span-1 flex items-center justify-center gap-6">
             <div className="border rounded-full flex gap-12 justify-between px-8 py-4 border-[#06123D] bg-[#06123D66]">
               <div className="flex flex-col items-center text-xs gap-1 text-white cursor-pointer">

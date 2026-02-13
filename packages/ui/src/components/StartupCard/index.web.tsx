@@ -9,6 +9,7 @@ interface StartupCardProps {
   showBehind?: boolean;
   isGolden?: boolean;
   nextCardIsGolden?: boolean;
+  hoverDirection?: SwipeDirection | null;
 }
 
 const getScoreColor = (score: number) => {
@@ -33,6 +34,7 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
       showBehind = false,
       isGolden = false,
       nextCardIsGolden = false,
+      hoverDirection = null,
     },
     ref,
   ) => {
@@ -63,7 +65,6 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
         }}
         {...handlers}
       >
-        {/* Golden glow from behind */}
         {nextCardIsGolden && isTop && (
           <div className="absolute -inset-2 rounded-lg bg-gradient-to-b from-yellow-500/20 to-amber-600/20 blur-xl animate-pulse pointer-events-none -z-10" />
         )}
@@ -75,20 +76,20 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
               : "bg-gradient-to-b from-startupCard-darkFrom to-startupCard-darkTo border border-startupCard-border shadow-dark"
           }`}
         >
-          {/* Swipe Direction Indicators */}
-          {isDragging && (
+          {(isDragging || hoverDirection) && (
             <>
-              {offset.x < -50 && (
+              {(hoverDirection === "left" || (isDragging && offset.x < -50)) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bear/30 pointer-events-none z-50">
                   <span className="text-6xl font-bold text-sentiment-bear rotate-12">BEAR</span>
                 </div>
               )}
-              {offset.x > 50 && (
+              {(hoverDirection === "right" || (isDragging && offset.x > 50)) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bull/30 pointer-events-none z-50">
                   <span className="text-6xl font-bold text-sentiment-bull -rotate-12">BULL</span>
                 </div>
               )}
-              {offset.y < -50 && Math.abs(offset.y) > Math.abs(offset.x) && (
+              {(hoverDirection === "up" ||
+                (isDragging && offset.y < -50 && Math.abs(offset.y) > Math.abs(offset.x))) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-neutral/30 pointer-events-none z-50">
                   <span className="text-6xl font-bold text-sentiment-neutral">SAVE</span>
                 </div>

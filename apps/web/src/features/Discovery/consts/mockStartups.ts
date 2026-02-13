@@ -1,4 +1,4 @@
-import type { Startup } from "../models/startup";
+import type { Startup } from "@signalvc/types";
 
 export const MOCK_STARTUPS: Startup[] = [
   {
