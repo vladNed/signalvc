@@ -1,23 +1,25 @@
 import * as React from "react";
-import type { Startup, SwipeDirection } from "@signalvc/types";
-import { useSwipeGesture } from "@signalvc/hooks";
+import type { Startup, SwipeType } from "@signalvc/types";
+import useSwipeGesture from "./hooks/useSwipeGesture";
 
-interface StartupCardProps {
+type StartupCardProps = {
   startup: Startup;
-  onSwipe: (direction: SwipeDirection) => void;
+  onSwipe: (direction: SwipeType) => void;
   isTop?: boolean;
   showBehind?: boolean;
   isGolden?: boolean;
   nextCardIsGolden?: boolean;
-  hoverDirection?: SwipeDirection | null;
-}
+  hoverDirection?: SwipeType | null;
+};
 
+// TODO: Move this to utils
 const getScoreColor = (score: number) => {
   if (score >= 70) return "text-emerald-400";
   if (score >= 50) return "text-yellow-400";
   return "text-red-400";
 };
 
+// TODO: Move this to utils
 const getSentimentColor = (sentiment: string) => {
   if (sentiment.includes("Very Bullish") || sentiment.includes("Bullish"))
     return "text-emerald-400";
@@ -49,12 +51,6 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
 
     const opacity = isDragging ? 1 - Math.abs(offset.x) / 900 : 1;
 
-    const formatCurrency = (value: number) => {
-      if (value >= 1000000) return `$${(value / 1000000).toFixed(0)}M`;
-      if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-      return `$${value.toLocaleString()}`;
-    };
-
     return (
       <div
         ref={ref}
@@ -78,20 +74,20 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
         >
           {(isDragging || hoverDirection) && (
             <>
-              {(hoverDirection === "left" || (isDragging && offset.x < -50)) && (
+              {(hoverDirection === "bear" || (isDragging && offset.x < -50)) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bear/30 pointer-events-none z-50">
                   <span className="text-6xl font-bold text-sentiment-bear rotate-12">BEAR</span>
                 </div>
               )}
-              {(hoverDirection === "right" || (isDragging && offset.x > 50)) && (
+              {(hoverDirection === "bull" || (isDragging && offset.x > 50)) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bull/30 pointer-events-none z-50">
                   <span className="text-6xl font-bold text-sentiment-bull -rotate-12">BULL</span>
                 </div>
               )}
-              {(hoverDirection === "up" ||
+              {(hoverDirection === "portfolio" ||
                 (isDragging && offset.y < -50 && Math.abs(offset.y) > Math.abs(offset.x))) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-neutral/30 pointer-events-none z-50">
-                  <span className="text-6xl font-bold text-sentiment-neutral">SAVE</span>
+                  <span className="text-6xl font-bold text-sentiment-neutral">PORTFOLIO</span>
                 </div>
               )}
             </>
@@ -107,16 +103,7 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
                       : "bg-startupCard-tagBg border-startupCard-tagBorder"
                   }`}
                 >
-                  {startup.industry}
-                </span>
-                <span
-                  className={`px-4 py-2 text-xs font-medium text-white rounded-md border ${
-                    isGolden
-                      ? "bg-startupCard-goldenTagBg border-startupCard-goldenBorder"
-                      : "bg-startupCard-tagBg border-startupCard-tagBorder"
-                  }`}
-                >
-                  {startup.fundingStage}
+                  {startup.targetMarkets[0]}
                 </span>
               </div>
               <div className="flex items-start">
@@ -127,13 +114,16 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
                       : "bg-startupCard-tagBg border-startupCard-tagBorder"
                   }`}
                 >
-                  {startup.founderName}
+                  John Doe
+                  {/* TODO: We need to fetch the actual founder's name */}
                 </div>
               </div>
             </div>
             <div className="row-span-2 flex flex-col items-center justify-between">
               <div className="text-center py-4">
-                <h2 className="text-3xl font-semibold text-white tracking-tight">{startup.name}</h2>
+                <h2 className="text-3xl font-semibold text-white tracking-tight">
+                  {startup.operationalName}
+                </h2>
               </div>
               <div
                 className={`border rounded-md p-3 text-center ${
@@ -154,14 +144,13 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
                 }`}
               >
                 <div className="text-center">
-                  <div className={`text-4xl font-medium ${getScoreColor(startup.bullBearScore)}`}>
-                    {startup.bullBearScore}
-                  </div>
+                  <div className={`text-4xl font-medium ${getScoreColor(99)}`}>{99}</div>
                   <div className="text-sm text-white/90 mt-2 font-semibold">Bull/Bear Score</div>
                   <div
-                    className={`text-xs mt-1 font-semibold ${getSentimentColor(startup.bullBearSentiment)}`}
+                    className={`text-xs mt-1 font-semibold ${getSentimentColor("Very Bullish")}`}
                   >
-                    {startup.bullBearSentiment}
+                    {/* TODO: display the actual sentiment */}
+                    {"Very Bullish"}
                   </div>
                 </div>
               </div>
@@ -174,23 +163,22 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
                 }`}
               >
                 <div className="text-center">
-                  <div className="text-3xl font-medium text-white">{startup.peerScore}</div>
+                  {/* TODO: Fetch and display the actual peer score */}
+                  <div className="text-3xl font-medium text-white">{99}</div>
                   <div className="text-xs text-white mt-1 font-medium">Peer Score</div>
                 </div>
               </div>
             </div>
             <div className="row-span-2 w-full gap-4 grid grid-cols-2 p-3">
               <div className="flex flex-col justify-end col-span-1 gap-4">
+                {/* TODO: Fetch and display the actual MRR */}
                 <div className="text-lg text-blue-200/50 mb-1 font-medium">MRR</div>
-                <div className="text-4xl font-medium text-white">
-                  ${startup.mrr.toLocaleString()}
-                </div>
+                <div className="text-4xl font-medium text-white">$NaN</div>
               </div>
               <div className="flex flex-col items-end justify-end col-span-1 gap-4">
+                {/* TODO: Fetch and display the actual ticket size */}
                 <div className="text-lg text-blue-200/50 mb-1 font-medium">Ticket Size</div>
-                <div className="text-4xl font-medium text-white">
-                  {formatCurrency(startup.ticketSize)}
-                </div>
+                <div className="text-4xl font-medium text-white">$NaN</div>
               </div>
             </div>
           </div>

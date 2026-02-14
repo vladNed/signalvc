@@ -24,6 +24,15 @@ class PostgresSettings(pydantic.BaseModel):
         ).encoded_string()
 
 
+class SupabaseSettings(pydantic.BaseModel):
+    url: str = ""
+    key: str = ""
+
+    @classmethod
+    def empty_instance(cls) -> "SupabaseSettings":
+        return cls(url="", key="")
+
+
 class Settings(pydantic_settings.BaseSettings):
     model_config = pydantic_settings.SettingsConfigDict(
         env_file=".env",
@@ -35,8 +44,8 @@ class Settings(pydantic_settings.BaseSettings):
     app_name: str = "veridion-api"
     app_log_level: str = ""
 
-    # PostgreSQL settings
     postgres: PostgresSettings = PostgresSettings.empty_instance()
+    supabase: SupabaseSettings = SupabaseSettings.empty_instance()
 
 
 def get_settings() -> Settings:

@@ -1,5 +1,7 @@
 from typing import Annotated
 from uuid import UUID
+from api.schemas.base import SchemasBaseModel
+from api.schemas.constants import SwipeType
 from pydantic import BaseModel, BeforeValidator, AfterValidator
 
 from . import validators
@@ -35,3 +37,20 @@ class ResponseItem(BaseModel):
         float,
         AfterValidator(validators.round_score),
     ]
+
+
+class SwipeRequest(SchemasBaseModel):
+    startup_id: UUID
+    swipe_type: SwipeType
+
+
+class Startup(SchemasBaseModel):
+    id: UUID
+    operational_name: str
+    description: str
+    target_markets: Annotated[list[str], BeforeValidator(validators.parse_target_markets)]
+    business_category: str
+    employee_count: int | None
+    founded_year: int | None
+    country_name: str | None
+    region_name: str | None

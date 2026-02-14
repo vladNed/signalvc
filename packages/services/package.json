@@ -1,0 +1,10 @@
+{
+  "name": "@signalvc/services",
+  "private": true,
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2"
+  }
+}
