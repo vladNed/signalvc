@@ -3,8 +3,24 @@
 import { BriefcaseBusiness, House, User } from "lucide-react";
 import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
 import { MOCK_STARTUPS } from "./consts/mockStartups";
+import { useAnonymousAuth } from "./hooks/useAnonymousAuth";
+import { useEffect } from "react";
 
 export default function DiscoveryPage() {
+  const { ensureAuth, loading } = useAnonymousAuth();
+
+  useEffect(() => {
+    void ensureAuth();
+  }, [ensureAuth]);
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center text-white bg-linear-to-b from-[#000A2E] to-[#010411]">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen text-white bg-linear-to-b from-[#000A2E] to-[#010411]">
       <div className="py-10 h-full ">

@@ -138,3 +138,8 @@ async def get_swipe_feed(
             status_code=500,
             detail="An unexpected error occurred",
         )
+
+
+@router.post("/swipe")
+async def swipe_action(user_id: str = fastapi.Depends(deps.get_user)):
+    return {"message": f"User {user_id} performed a swipe action"}

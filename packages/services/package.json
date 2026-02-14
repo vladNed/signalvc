@@ -1,5 +1,5 @@
 {
-  "name": "@signalvc/domain",
+  "name": "@signalvc/services",
   "private": true,
   "version": "0.0.0",
   "main": "src/index.ts",
