@@ -1,21 +1,11 @@
-export interface Startup {
+export type Startup = {
   id: string;
-  name: string;
+  operationalName: string;
   description: string;
-  industry: string;
-  fundingStage: string;
-  teamSize: number;
-  location: string;
-  imageUrl: string;
-  founderName: string;
-  bullBearScore: number;
-  bullBearSentiment: "Very Bullish" | "Bullish" | "Neutral" | "Bearish" | "Very Bearish";
-  peerScore: number;
-  mrr: number;
-  ticketSize: number;
-  countryCode: string;
-}
+  targetMarkets: string[];
+  businessCategory: string;
+  employeeCount: number;
+  foundedYear: number;
+};
 
 export type SwipeDirection = "bear" | "bull" | "portofolio" | null;
-
-export interface SwipeResponse {}
