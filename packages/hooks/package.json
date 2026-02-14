@@ -5,9 +5,11 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
-    "@signalvc/types": "workspace:*"
+    "@signalvc/types": "workspace:*",
+    "@signalvc/services": "workspace:*",
+    "@supabase/supabase-js": "^2.95.3"
   },
   "devDependencies": {
-    "@types/react": "^18.0.28"
+    "@types/react": "^19.1.17"
   }
 }

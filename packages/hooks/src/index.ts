@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useCallback } from "react";
 
 import type { SwipeDirection } from "@signalvc/types";
+export * from "./useFeedClient";
 
 export const useExample = () => {
   return "Hello from hooks!";
