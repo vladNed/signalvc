@@ -141,7 +141,7 @@ async def get_swipe_feed(
         )
 
 
-@router.get("/", tags=["feed"], response_model=schemas.feed.FeedResponse)
+@router.get("/", tags=["feed"], response_model=list[schemas.feed.Startup])
 async def get_feed(
     user_id: Annotated[str, fastapi.Depends(deps.get_user)],
     db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
@@ -150,16 +150,14 @@ async def get_feed(
     return await repo.fetch_feed(user_id=user_id)
 
 
-@router.post("/swipe", tags=["feed"], response_model=schemas.feed.SwipeBulkResponse)
+@router.post("/swipe", tags=["feed"], status_code=204)
 async def swipe_action(
-    request: schemas.feed.SwipeBulkRequest,
+    request: schemas.feed.SwipeRequest,
     user_id: Annotated[str, fastapi.Depends(deps.get_user)],
     db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
-):
+) -> None:
     repo = FeedRepository(db_conn)
-    await repo.create_swipe_bulk(
+    await repo.create_swipe(
         user_id=user_id,
-        swipes=request.swipes,
+        swipe=request,
     )
-
-    return schemas.feed.SwipeBulkResponse(success=True)

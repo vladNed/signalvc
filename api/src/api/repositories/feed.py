@@ -1,4 +1,3 @@
-from api.schemas.feed import FeedResponse
 import asyncpg
 import time
 from typing import Any
@@ -15,7 +14,7 @@ class FeedRepository:
     def __init__(self, db_conn: asyncpg.Connection):
         self.db_conn = db_conn
 
-    async def fetch_feed(self, user_id: str) -> FeedResponse:
+    async def fetch_feed(self, user_id: str) -> list[schemas.feed.Startup]:
         """Fetch the feed for a given user."""
         query = """
             WITH filtered as (
@@ -39,67 +38,40 @@ class FeedRepository:
         """
 
         records = await self.db_conn.fetch(query)
-        return schemas.feed.FeedResponse(data=[schemas.feed.Startup(**dict(record)) for record in records])
+        return [schemas.feed.Startup(**dict(record)) for record in records]
 
-    async def create_swipe_bulk(
-        self,
-        user_id: str,
-        swipes: list[schemas.feed.SwipeRequest],
-    ) -> dict[str, Any]:
+    async def create_swipe(self, user_id: str, swipe: schemas.feed.SwipeRequest) -> dict[str, Any]:
         """
-        Create multiple swipes in bulk and optionally update swipe statistics.
+        Create a swipe for a user.
 
         Args:
-            swipes: List of swipe dictionaries, each containing:
-                - user_id: UUID of the user
-                - startup_id: UUID of the startup
-                - swipe_type: Type of swipe ('bull', 'bear', or 'add_to_portofolio')
+            swipe: Swipe dictionary containing:
             update_stats: Whether to update swipe_stats table atomically
-
-        Returns:
-            Dictionary containing:
-                - success: Boolean indicating success
-                - inserted_count: Number of swipes inserted
-                - updated_stats: List of updated startup stats (if update_stats=True)
-                - processing_time_ms: Processing time in milliseconds
 
         Raises:
             ValueError: If input validation fails
         """
         start_time = time.time()
 
-        # Input validation
-        if not swipes:
-            raise ValueError("Swipes list cannot be empty")
+        swipe_records = (
+            str(user_id),
+            str(swipe.startup_id),
+            swipe.swipe_type.value,
+        )
 
-        swipe_records = [
-            (
-                str(user_id),
-                str(swipe.startup_id),
-                swipe.swipe_type.value,
-            )
-            for swipe in swipes
-        ]
-
-        # Start transaction
         async with self.db_conn.transaction():
-            # Bulk insert swipes
             insert_query = """
-                INSERT INTO swipes (user_id, startup_id, swipe_type)
+                INSERT INTO swipe (user_id, startup_id, swipe_type)
                 VALUES ($1, $2, $3)
             """
-            await self.db_conn.executemany(insert_query, swipe_records)
-            inserted_count = len(swipe_records)
+            await self.db_conn.execute(insert_query, *swipe_records)
 
         processing_time_ms = (time.time() - start_time) * 1000
 
         logger.debug(
-            "Processed %d swipes for user %s in %.2f ms.",
-            inserted_count,
+            "Processed swipe for user %s in %.2f ms.",
             user_id,
             processing_time_ms,
         )
 
-        return {
-            "success": True,
-        }
+        return {"success": True}

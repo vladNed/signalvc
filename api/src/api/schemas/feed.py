@@ -39,17 +39,9 @@ class ResponseItem(BaseModel):
     ]
 
 
-class SwipeRequest(BaseModel):
+class SwipeRequest(SchemasBaseModel):
     startup_id: UUID
     swipe_type: SwipeType
-
-
-class SwipeBulkRequest(BaseModel):
-    swipes: list[SwipeRequest]
-
-
-class SwipeBulkResponse(BaseModel):
-    success: bool
 
 
 class Startup(SchemasBaseModel):
