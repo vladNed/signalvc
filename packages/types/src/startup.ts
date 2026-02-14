@@ -8,4 +8,4 @@ export type Startup = {
   foundedYear: number;
 };
 
-export type SwipeDirection = "bear" | "bull" | "portfolio" | null;
+export type SwipeType = "bear" | "bull" | "portfolio" | null;

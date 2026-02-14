@@ -18,7 +18,7 @@ const feedApi = baseApiInstance.injectEndpoints({
         url: "/feed/swipe",
         method: "POST",
         body: {
-          swipeDirection: "bull",
+          swipeType: "bull",
           startupId,
         },
       }),
@@ -43,7 +43,7 @@ const feedApi = baseApiInstance.injectEndpoints({
         url: "/feed/swipe",
         method: "POST",
         body: {
-          swipeDirection: "bear",
+          swipeType: "bear",
           startupId,
         },
       }),
@@ -63,12 +63,12 @@ const feedApi = baseApiInstance.injectEndpoints({
         }
       },
     }),
-    swipePortofolio: builder.mutation<void, { startupId: string }>({
+    swipePortfolio: builder.mutation<void, { startupId: string }>({
       query: ({ startupId }) => ({
         url: "/feed/swipe",
         method: "POST",
         body: {
-          swipeDirection: "portofolio",
+          swipeType: "portofolio",
           startupId,
         },
       }),
@@ -95,5 +95,5 @@ export const {
   useFetchFeedQuery,
   useSwipeBullMutation,
   useSwipeBearMutation,
-  useSwipePortofolioMutation,
+  useSwipePortfolioMutation,
 } = feedApi;
