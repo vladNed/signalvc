@@ -261,6 +261,9 @@ importers:
       '@signalvc/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@signalvc/hooks':
+        specifier: workspace:*
+        version: link:../../packages/hooks
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.18

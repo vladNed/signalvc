@@ -28,11 +28,7 @@ class BaseApiClient {
 
   /// Safely parse JSON response, fallback to text if JSON parsing fails... Idk sometimes I am scared.
   protected async safeParseJson(response: Response): Promise<unknown> {
-    try {
-      return await response.json();
-    } catch {
-      return await response.text();
-    }
+    return await response.json();
   }
 
   protected async getAuthHeaders(): Promise<Record<string, string>> {

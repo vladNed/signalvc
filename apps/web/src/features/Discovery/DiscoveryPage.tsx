@@ -5,9 +5,13 @@ import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
 import { MOCK_STARTUPS } from "./consts/mockStartups";
 import { useAnonymousAuth } from "./hooks/useAnonymousAuth";
 import { useEffect } from "react";
+import { createClient } from "@/shared/supabase/client";
 
 export default function DiscoveryPage() {
   const { ensureAuth, loading } = useAnonymousAuth();
+
+  const supabaseClient = createClient();
+  const baseApiUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080/api/v1";
 
   useEffect(() => {
     void ensureAuth();
@@ -26,7 +30,11 @@ export default function DiscoveryPage() {
       <div className="py-10 h-full ">
         <div className="max-w-120 mx-auto  h-full grid grid-rows-12">
           <div className="row-span-11">
-            <SwipeStack startups={MOCK_STARTUPS} />
+            <SwipeStack
+              startups={MOCK_STARTUPS}
+              baseApiUrl={baseApiUrl}
+              supabaseClient={supabaseClient}
+            />
           </div>
           <div className="row-span-1 flex items-center justify-center gap-6">
             <div className="border rounded-full flex gap-12 justify-between px-8 py-4 border-[#06123D] bg-[#06123D66]">
