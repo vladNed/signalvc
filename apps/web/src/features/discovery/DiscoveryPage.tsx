@@ -6,7 +6,7 @@ import {
   useFetchFeedQuery,
   useSwipeBearMutation,
   useSwipeBullMutation,
-  useSwipePortofolioMutation,
+  useSwipePortfolioMutation,
 } from "./api/feedApi";
 import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
 import useMedia from "./hooks/useMedia";
@@ -31,11 +31,12 @@ export default function DiscoveryPage() {
               onFetchFeed={useFetchFeedQuery}
               useSwipeBearMutation={useSwipeBearMutation}
               useSwipeBullMutation={useSwipeBullMutation}
-              useSwipePortofolioMutation={useSwipePortofolioMutation}
+              useSwipePortfolioMutation={useSwipePortfolioMutation}
               useMedia={useMedia}
             />
           </div>
           <div className="row-span-1 flex items-center justify-center gap-6">
+            {/* TODO: Change this to browser design menu */}
             <div className="border rounded-full flex gap-12 justify-between px-8 py-4 border-[#06123D] bg-[#06123D66]">
               <div className="flex flex-col items-center text-xs gap-1 text-white cursor-pointer">
                 <House size={20} />
@@ -43,7 +44,7 @@ export default function DiscoveryPage() {
               </div>
               <div className="flex flex-col items-center text-xs gap-1 text-muted-foreground cursor-not-allowed blur-xs">
                 <BriefcaseBusiness size={20} />
-                Portofolio
+                Portfolio
               </div>
               <div className="flex flex-col items-center text-xs gap-1 text-muted-foreground cursor-not-allowed blur-xs">
                 <User size={20} />

@@ -1,27 +1,35 @@
-import type { SwipeDirection } from "@signalvc/types";
+import { TypedUseMutation } from "@reduxjs/toolkit/dist/query/react";
+import type { SwipeType } from "@signalvc/types";
 
 const useSwipe = (
-  setAnimationDirection: React.Dispatch<React.SetStateAction<SwipeDirection>>,
-  setStartupIndex: React.Dispatch<React.SetStateAction<number>>,
+  setAnimationDirection: React.Dispatch<React.SetStateAction<SwipeType>>,
+  useSwipeBullMutation: TypedUseMutation<void, { startupId: string }, any>,
+  useSwipeBearMutation: TypedUseMutation<void, { startupId: string }, any>,
+  useSwipePortfolioMutation: TypedUseMutation<void, { startupId: string }, any>,
 ) => {
-  const handleSwipeAnimation = (direction: SwipeDirection) => {
+  const [swipeBull] = useSwipeBullMutation();
+  const [swipeBear] = useSwipeBearMutation();
+  const [swipePortfolio] = useSwipePortfolioMutation();
+  const handleSwipeAnimation = (direction: SwipeType) => {
     setAnimationDirection(direction);
     setTimeout(() => {
-      setStartupIndex((prev) => prev + 1);
       setAnimationDirection(null);
     }, 300);
   };
 
-  const onBullSwipeHandler = (startupId: string) => {
+  const onBullSwipeHandler = async (startupId: string) => {
     handleSwipeAnimation("bull");
+    await swipeBull({ startupId });
   };
 
-  const onBearSwipeHandler = (startupId: string) => {
+  const onBearSwipeHandler = async (startupId: string) => {
     handleSwipeAnimation("bear");
+    await swipeBear({ startupId });
   };
 
-  const onPortfolioSwipeHandle = (startupId: string) => {
+  const onPortfolioSwipeHandle = async (startupId: string) => {
     handleSwipeAnimation("portfolio");
+    await swipePortfolio({ startupId });
   };
 
   return {
