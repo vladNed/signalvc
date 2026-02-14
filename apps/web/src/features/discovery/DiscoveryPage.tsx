@@ -9,6 +9,7 @@ import {
   useSwipePortofolioMutation,
 } from "./api/feedApi";
 import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
+import useMedia from "./hooks/useMedia";
 
 export default function DiscoveryPage() {
   const { loading } = useAnonymousAuth();
@@ -26,11 +27,12 @@ export default function DiscoveryPage() {
       <div className="py-10 h-full ">
         <div className="max-w-120 mx-auto  h-full grid grid-rows-12">
           <div className="row-span-11">
-            <SwipeStack 
+            <SwipeStack
               onFetchFeed={useFetchFeedQuery}
               onSwipeBear={useSwipeBearMutation}
               onSwipeBull={useSwipeBullMutation}
               onSwipePortofolio={useSwipePortofolioMutation}
+              useMedia={useMedia}
             />
           </div>
           <div className="row-span-1 flex items-center justify-center gap-6">
