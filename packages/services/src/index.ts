@@ -1,1 +1,1 @@
-export const helloDomain = () => "hello from domain";
+export { BaseApiClient } from "./baseClient";

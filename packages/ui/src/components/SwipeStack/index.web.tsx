@@ -63,10 +63,10 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(({ startups
               if (index !== 0 || !animatingDirection) return {};
 
               const translateX =
-                animatingDirection === "left" ? -400 : animatingDirection === "right" ? 400 : 0;
-              const translateY = animatingDirection === "up" ? -400 : 0;
+                animatingDirection === "bear" ? -400 : animatingDirection === "bull" ? 400 : 0;
+              const translateY = animatingDirection === "portofolio" ? -400 : 0;
               const rotate =
-                animatingDirection === "left" ? -20 : animatingDirection === "right" ? 20 : 0;
+                animatingDirection === "bear" ? -20 : animatingDirection === "bull" ? 20 : 0;
 
               return {
                 transform: `translate(${translateX}px, ${translateY}px) rotate(${rotate}deg)`,
@@ -107,21 +107,21 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(({ startups
       {isDesktop && !isComplete && (
         <div className="flex items-center justify-center gap-4 mt-6">
           <button
-            onClick={() => handleSwipe("left")}
+            onClick={() => handleSwipe("bear")}
             className="px-6 py-2 text-sm font-medium text-sentiment-bear rounded-md border border-sentiment-bear/30 bg-sentiment-bear/10 hover:bg-sentiment-bear/20 hover:border-sentiment-bear/50 backdrop-blur-sm transition-all"
           >
             BEAR
           </button>
 
           <button
-            onClick={() => handleSwipe("up")}
+            onClick={() => handleSwipe("portofolio")}
             className="px-6 py-2 text-sm font-medium text-sentiment-neutral rounded-md border border-sentiment-neutral/20 bg-sentiment-neutral/5 hover:bg-sentiment-neutral/10 hover:border-sentiment-neutral/30 backdrop-blur-sm transition-all"
           >
-            SAVE
+            PORTOFOLIO
           </button>
 
           <button
-            onClick={() => handleSwipe("right")}
+            onClick={() => handleSwipe("bull")}
             className="px-6 py-2 text-sm font-medium text-sentiment-bull rounded-md border border-sentiment-bull/30 bg-sentiment-bull/10 hover:bg-sentiment-bull/20 hover:border-sentiment-bull/50 backdrop-blur-sm transition-all"
           >
             BULL

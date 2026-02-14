@@ -72,13 +72,13 @@ export function useSwipeGesture({
 
     let direction: SwipeDirection = null;
 
-    // Vertical swipe (up) takes priority
+    // Vertical swipe (portofolio) takes priority
     if (absY > absX && absY > threshold && deltaY < 0) {
-      direction = "up";
+      direction = "portofolio";
     }
     // Horizontal swipes
     else if (absX > threshold) {
-      direction = deltaX > 0 ? "right" : "left";
+      direction = deltaX > 0 ? "bull" : "bear";
     }
 
     if (direction) {

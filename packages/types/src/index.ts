@@ -1,2 +1,3 @@
-export type { AuthResult, AuthSession, AuthUser, OAuthProvider } from "./auth";
-export type { Startup, SwipeDirection } from "./startup";
+export type * from "./auth";
+export type * from "./startup";
+export type * from "./baseApi";

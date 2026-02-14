@@ -78,20 +78,20 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
         >
           {(isDragging || hoverDirection) && (
             <>
-              {(hoverDirection === "left" || (isDragging && offset.x < -50)) && (
+              {(hoverDirection === "bear" || (isDragging && offset.x < -50)) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bear/30 pointer-events-none z-50">
                   <span className="text-6xl font-bold text-sentiment-bear rotate-12">BEAR</span>
                 </div>
               )}
-              {(hoverDirection === "right" || (isDragging && offset.x > 50)) && (
+              {(hoverDirection === "bull" || (isDragging && offset.x > 50)) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bull/30 pointer-events-none z-50">
                   <span className="text-6xl font-bold text-sentiment-bull -rotate-12">BULL</span>
                 </div>
               )}
-              {(hoverDirection === "up" ||
+              {(hoverDirection === "portofolio" ||
                 (isDragging && offset.y < -50 && Math.abs(offset.y) > Math.abs(offset.x))) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-sentiment-neutral/30 pointer-events-none z-50">
-                  <span className="text-6xl font-bold text-sentiment-neutral">SAVE</span>
+                  <span className="text-6xl font-bold text-sentiment-neutral">PORTOFOLIO</span>
                 </div>
               )}
             </>

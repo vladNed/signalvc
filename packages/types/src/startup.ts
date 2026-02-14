@@ -16,4 +16,6 @@ export interface Startup {
   countryCode: string;
 }
 
-export type SwipeDirection = "left" | "right" | "up" | null;
+export type SwipeDirection = "bear" | "bull" | "portofolio" | null;
+
+export interface SwipeResponse {}
