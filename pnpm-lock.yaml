@@ -233,6 +233,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@reduxjs/toolkit':
+        specifier: ^2.11.2
+        version: 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1))(react@19.2.3)
+      '@signalvc/services':
+        specifier: workspace:*
+        version: link:../../packages/services
       '@signalvc/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -257,13 +263,13 @@ importers:
       react-dom:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
+      react-redux:
+        specifier: ^9.2.0
+        version: 9.2.0(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1)
     devDependencies:
       '@signalvc/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@signalvc/hooks':
-        specifier: workspace:*
-        version: link:../../packages/hooks
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.18
@@ -317,15 +323,9 @@ importers:
 
   packages/hooks:
     dependencies:
-      '@signalvc/services':
-        specifier: workspace:*
-        version: link:../services
       '@signalvc/types':
         specifier: workspace:*
         version: link:../types
-      '@supabase/supabase-js':
-        specifier: ^2.95.3
-        version: 2.95.3
     devDependencies:
       '@types/react':
         specifier: ^19.1.17
@@ -335,12 +335,9 @@ importers:
 
   packages/services:
     dependencies:
-      '@signalvc/types':
-        specifier: workspace:*
-        version: link:../types
-      '@supabase/supabase-js':
-        specifier: ^2.95.3
-        version: 2.95.3
+      '@reduxjs/toolkit':
+        specifier: ^2.11.2
+        version: 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1))(react@19.2.3)
 
   packages/store: {}
 
