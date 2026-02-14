@@ -1,7 +1,7 @@
 from typing import Annotated
 import logging
 import time
-
+from api.repositories.feed import FeedRepository
 import fastapi
 import asyncpg
 from pydantic import ValidationError
@@ -10,8 +10,8 @@ from api import schemas, deps
 from api.repositories import StartupRepository
 
 
-logger = logging.getLogger("uvicorn")
-router = fastapi.APIRouter(tags=["dev"])
+logger = logging.getLogger(__name__)
+router = fastapi.APIRouter()
 
 
 @router.post(
@@ -24,6 +24,7 @@ router = fastapi.APIRouter(tags=["dev"])
             "model": schemas.exceptions.BadRequest,
         },
     },
+    tags=["dev"],
 )
 async def get_swipe_feed(
     request: schemas.feed.Request,
@@ -140,6 +141,25 @@ async def get_swipe_feed(
         )
 
 
-@router.post("/swipe")
-async def swipe_action(user_id: str = fastapi.Depends(deps.get_user)):
-    return {"message": f"User {user_id} performed a swipe action"}
+@router.get("/", tags=["feed"], response_model=schemas.feed.FeedResponse)
+async def get_feed(
+    user_id: Annotated[str, fastapi.Depends(deps.get_user)],
+    db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
+):
+    repo = FeedRepository(db_conn)
+    return await repo.fetch_feed(user_id=user_id)
+
+
+@router.post("/swipe", tags=["feed"], response_model=schemas.feed.SwipeBulkResponse)
+async def swipe_action(
+    request: schemas.feed.SwipeBulkRequest,
+    user_id: Annotated[str, fastapi.Depends(deps.get_user)],
+    db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
+):
+    repo = FeedRepository(db_conn)
+    await repo.create_swipe_bulk(
+        user_id=user_id,
+        swipes=request.swipes,
+    )
+
+    return schemas.feed.SwipeBulkResponse(success=True)

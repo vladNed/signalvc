@@ -19,6 +19,5 @@ fi
 exec gunicorn -k uvicorn.workers.UvicornWorker \
     --bind ${HOST}:${PORT} \
     --log-level ${LOG_LEVEL} \
-    --workers 4 \
     --reload \
     ${APP_MODULE}

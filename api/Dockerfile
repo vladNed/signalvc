@@ -23,8 +23,8 @@ RUN poetry config virtualenvs.create false \
     && poetry install --only main
 
 # Make sure entrypoint is executable
-RUN chmod +x ./scripts/entrypoint.sh
+RUN chmod +x ./scripts/run_local.sh
 
 EXPOSE 8080
 
-CMD ["./scripts/entrypoint.sh"]
+CMD ["./scripts/run_local.sh"]

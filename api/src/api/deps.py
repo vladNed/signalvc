@@ -4,11 +4,13 @@ from asyncpg.pool import PoolConnectionProxy
 import fastapi
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import supabase
+import logging
 
 from api.conf import settings
 
 
 security = HTTPBearer()
+logger = logging.getLogger("uvicorn")
 
 
 async def get_db(
@@ -21,6 +23,7 @@ async def get_db(
 
 async def get_user(creds: HTTPAuthorizationCredentials = fastapi.Depends(security)):
     client: supabase.Client = supabase.create_client(settings.supabase.url, settings.supabase.key)
+    logger.info(f"Authenticating user with token: {creds.credentials}...")
 
     try:
         resp = client.auth.get_user(creds.credentials)
