@@ -1,5 +1,6 @@
 from typing import Annotated
 from uuid import UUID
+from api.schemas.base import SchemasBaseModel
 from api.schemas.constants import SwipeType
 from pydantic import BaseModel, BeforeValidator, AfterValidator
 
@@ -51,17 +52,13 @@ class SwipeBulkResponse(BaseModel):
     success: bool
 
 
-class Startup(BaseModel):
+class Startup(SchemasBaseModel):
     id: UUID
     operational_name: str
     description: str
-    target_markets: list[str]
+    target_markets: Annotated[list[str], BeforeValidator(validators.parse_target_markets)]
     business_category: str
-    employee_count: int
-    founded_year: int
-    country_name: str
-    region_name: str
-
-
-class FeedResponse(BaseModel):
-    data: list[Startup]
+    employee_count: int | None
+    founded_year: int | None
+    country_name: str | None
+    region_name: str | None
