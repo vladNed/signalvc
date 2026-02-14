@@ -29,9 +29,9 @@ export default function DiscoveryPage() {
           <div className="row-span-11">
             <SwipeStack
               onFetchFeed={useFetchFeedQuery}
-              onSwipeBear={useSwipeBearMutation}
-              onSwipeBull={useSwipeBullMutation}
-              onSwipePortofolio={useSwipePortofolioMutation}
+              useSwipeBearMutation={useSwipeBearMutation}
+              useSwipeBullMutation={useSwipeBullMutation}
+              useSwipePortofolioMutation={useSwipePortofolioMutation}
               useMedia={useMedia}
             />
           </div>
