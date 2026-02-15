@@ -14,7 +14,8 @@
     "tailwind-merge": "^2.2.1",
     "@signalvc/types": "workspace:*",
     "@signalvc/hooks": "workspace:*",
-    "@reduxjs/toolkit": "^2.11.2"
+    "@reduxjs/toolkit": "^2.11.2",
+    "lucide-react": "^0.563.0"
   },
   "peerDependencies": {
     "react": "*",

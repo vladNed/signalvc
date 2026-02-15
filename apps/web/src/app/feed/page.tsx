@@ -3,7 +3,7 @@ import { AppLayout } from "@/shared/components";
 
 export default function DashboardPage() {
   return (
-    <AppLayout>
+    <AppLayout activeTab="feed">
       <FeedPage />
     </AppLayout>
   );

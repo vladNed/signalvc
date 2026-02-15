@@ -50,9 +50,9 @@ const config: Config = {
           peerCircleGoldenBg: "rgba(161, 98, 7, 0.6)",
         },
         sentiment: {
-          bull: "oklch(62.7% 0.194 149.214)", // Emerald Green
-          neutral: "oklch(97.9% 0.021 166.113)", // White
-          bear: "oklch(63.7% 0.237 25.331)", // Red
+          bull: "oklch(0.7557 0.1784 156.45)", // Emerald Green
+          portfolio: "oklch(0.6833 0.1595 270.23)", // Bluish
+          bear: "oklch(0.5771 0.2152 27.33)", // Red
         },
         border: "#27272a",
         input: "#27272a",

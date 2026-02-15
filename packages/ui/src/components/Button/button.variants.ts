@@ -14,6 +14,7 @@ export const buttonVariants = cva(
         // Social specific variants
         google: "bg-white text-black border border-gray-300 hover:bg-gray-100 active:bg-gray-200",
         apple: "bg-black text-white hover:bg-gray-900 active:bg-gray-800",
+        feed: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transform-gpu will-change-transform transition-transform transition-shadow duration-200 ease-out hover:-translate-y-1 active:translate-y-1 hover:shadow-lg transition-all duration-300"
       },
       size: {
         default: "h-10 px-4 py-2",

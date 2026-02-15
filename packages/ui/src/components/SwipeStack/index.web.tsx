@@ -6,6 +6,7 @@ import { TypedUseMutation, TypedUseQuery } from "@reduxjs/toolkit/query/react";
 import { Button } from "../Button/index.web";
 import useGolderCard from "./hooks/useGolderCard";
 import useSwipe from "./hooks/useSwipe";
+import { MoveUp, MoveLeft, MoveRight } from "lucide-react";
 
 type SwipeStackProps = {
   onFetchFeed: TypedUseQuery<Startup[], void, any>;
@@ -58,7 +59,7 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
               <div className="text-6xl mb-4">🎉</div>
               <h2 className="text-2xl font-bold text-white mb-2">All Done!</h2>
               <p className="text-neutral-400 mb-6">You&apos;ve reviewed all startups</p>
-              <button className="px-6 py-3 bg-emerald-500 text-white rounded-lg font-semibold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20">
+              <button className="cursor-pointer px-6 py-3 bg-emerald-500 text-white rounded-lg font-semibold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20">
                 Start Over
               </button>
             </div>
@@ -104,27 +105,30 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
         </div>
 
         {isDesktop && (
-          <div className="flex items-center justify-center gap-4 mt-6">
+          <div className="grid items-center justify-center gap-4 mt-6 grid-cols-12 w-full h-20">
             <Button
-              variant="default"
-              className="px-6 py-2 text-sm font-medium text-sentiment-bear rounded-md border border-sentiment-bear/30 bg-sentiment-bear/10 hover:bg-sentiment-bear/20 hover:border-sentiment-bear/50 backdrop-blur-sm transition-all"
+              className="cursor-pointer hover:bg-sentiment-bear/40 flex-col text-sentiment-bear col-span-3 bg-sentiment-bear/30 border border-sentiment-bear rounded-lg items-center flex justify-center h-full"
               onClick={() => onBearSwipeHandler(startups![0].id)}
+              variant="feed"
             >
-              BEAR
+              <p>BEAR</p>
+              <MoveLeft size={16} />
             </Button>
-            <Button
-              variant="default"
-              className="px-6 py-2 text-sm font-medium text-sentiment-portofolio rounded-md border border-sentiment-portofolio/30 bg-sentiment-portofolio/10 hover:bg-sentiment-portofolio/20 hover:border-sentiment-portofolio/50 backdrop-blur-sm transition-all"
+            <Button 
+              className="cursor-pointer hover:bg-sentiment-portfolio/40 flex-col text-sentiment-portfolio col-span-6 bg-sentiment-portfolio/30 border border-sentiment-portfolio rounded-lg items-center flex justify-center h-full"
               onClick={() => onPortfolioSwipeHandle(startups![0].id)}
+              variant="feed"
             >
-              PORTOFOLIO
+              <MoveUp size={16} />
+              <p>SAVE</p>
             </Button>
-            <Button
-              variant="default"
-              className="px-6 py-2 text-sm font-medium text-sentiment-bull rounded-md border border-sentiment-bull/30 bg-sentiment-bull/10 hover:bg-sentiment-bull/20 hover:border-sentiment-bull/50 backdrop-blur-sm transition-all"
+            <Button 
+              className="cursor-pointer hover:bg-sentiment-bull/40 flex-col text-sentiment-bull col-span-3 bg-sentiment-bull/30 border border-sentiment-bull rounded-lg items-center flex justify-center h-full"
               onClick={() => onBullSwipeHandler(startups![0].id)}
+              variant="feed"
             >
-              BULL
+              <p>BULL</p>
+              <MoveRight size={16} />
             </Button>
           </div>
         )}
