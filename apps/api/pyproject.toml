@@ -38,7 +38,7 @@ build-backend = "poetry.core.masonry.api"
 # this is typically a path given in POSIX (e.g. forward slashes)
 # format, relative to the token %(here)s which refers to the location of this
 # ini file
-script_location = "%(here)s/migrations"
+script_location = "%(here)s/src/api/migrations"
 
 # additional paths to be prepended to sys.path. defaults to the current working directory.
 prepend_sys_path = ["."]
