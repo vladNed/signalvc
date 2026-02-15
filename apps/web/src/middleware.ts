@@ -2,12 +2,18 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Routes that don't require authentication
-const PUBLIC_ROUTES = ["/auth", "/auth/callback", "/discover"];
+const PUBLIC_ROUTES = ["/auth", "/auth/callback", "/auth/verify", "/auth/confirm"];
+
+// Routes that require full authentication (no anonymous users)
+const AUTHENTICATED_ONLY_ROUTES = ["/feed", "/portfolio"];
+
+// Routes only for anonymous users
+const ANONYMOUS_ONLY_ROUTES = ["/discover"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip auth check for public routes
+  // Skip auth check for public routes (auth pages)
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     return NextResponse.next();
   }
@@ -39,7 +45,35 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Check if route is anonymous-only (like /discover)
+  const isAnonymousOnlyRoute = ANONYMOUS_ONLY_ROUTES.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  if (isAnonymousOnlyRoute) {
+    // If user is authenticated (not anonymous), redirect to /feed
+    if (user && !user.is_anonymous) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/feed";
+      return NextResponse.redirect(url);
+    }
+    // Allow anonymous users or no user to access
+    return NextResponse.next();
+  }
+
+  // No user at all - redirect to auth
   if (!user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth";
+    return NextResponse.redirect(url);
+  }
+
+  // Check if route requires full authentication (no anonymous users)
+  const requiresFullAuth = AUTHENTICATED_ONLY_ROUTES.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  if (requiresFullAuth && user.is_anonymous) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth";
     return NextResponse.redirect(url);

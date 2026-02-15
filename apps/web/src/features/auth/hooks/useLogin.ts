@@ -3,56 +3,87 @@
 import { createClient } from "@/shared/supabase/client";
 import type { OAuthProvider } from "@signalvc/types";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
+  
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const router = useRouter();
 
   const supabase = createClient();
 
-  async function signInWithPassword(email: string, password: string) {
+  async function signInWithEmail() {
     setLoading(true);
     setError(null);
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (authError) {
-      setError(authError.message);
+    try {
+      // Check if there's an existing anonymous session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user.is_anonymous) {
+        // Convert anonymous user to email user by updating with email
+        // This sends a verification email/OTP
+        const { error: updateError } = await supabase.auth.updateUser({ email });
+        
+        if (updateError) {
+          setError(updateError.message);
+          setLoading(false);
+          return;
+        }
+        
+        console.log("Verification email sent to convert anonymous user");
+      } else {
+        // Regular email OTP sign in for new or existing users
+        const { error: otpError } = await supabase.auth.signInWithOtp({
+          email,
+          options: { shouldCreateUser: true },
+        });
+        
+        if (otpError) {
+          setError(otpError.message);
+          setLoading(false);
+          return;
+        }
+      }
+      
       setLoading(false);
-      return false;
-    }
-
-    setLoading(false);
-    return true;
-  }
-
-  async function signUpWithPassword(email: string, password: string) {
-    setLoading(true);
-    setError(null);
-
-    const { error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (authError) {
-      setError(authError.message);
+      router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "An error occurred";
+      setError(errorMessage);
       setLoading(false);
-      return false;
     }
-
-    setLoading(false);
-    return true;
   }
 
   async function signInWithOAuth(provider: OAuthProvider) {
     setLoading(true);
     setError(null);
 
-    const { error: authError } = await supabase.auth.signInWithOAuth({
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      const user = session.user;
+      if (user.is_anonymous) {
+        const { data, error } = await supabase.auth.linkIdentity({
+          provider,
+          options: {
+            redirectTo: `${window.location.origin}/auth/callback`,
+          },
+        });
+        if (error) {
+          setError(error.message);
+          setLoading(false);
+          return;
+        }
+        console.log("Redirect to provider for OAuth linking:", data.url);
+        window.location.href = data.url;
+        return;
+      }
+    }
+
+    const { data, error: authError } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
@@ -62,8 +93,10 @@ export function useLogin() {
     if (authError) {
       setError(authError.message);
       setLoading(false);
+      return;
     }
+    window.location.href = data.url;
   }
 
-  return { signInWithPassword, signUpWithPassword, signInWithOAuth, loading, error };
+  return { signInWithEmail, signInWithOAuth, loading, error, email, setEmail };
 }
