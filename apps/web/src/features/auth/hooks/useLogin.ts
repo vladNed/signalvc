@@ -52,7 +52,7 @@ export function useLogin() {
     setLoading(true);
     setError(null);
 
-    const { error: authError } = await supabase.auth.signInWithOAuth({
+    const { data, error: authError } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
@@ -62,7 +62,9 @@ export function useLogin() {
     if (authError) {
       setError(authError.message);
       setLoading(false);
-    }
+      return;
+    } 
+    window.location.href = data.url;
   }
 
   return { signInWithPassword, signUpWithPassword, signInWithOAuth, loading, error };
