@@ -1,8 +1,10 @@
 "use client";
 
+import { useAccount } from "@/shared/contexts/AccountContext";
 import { Button } from "@signalvc/ui/src/components/Button/index.web";
 import Image from "next/image";
 import Link from "next/link";
+import { User } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface AppLayoutProps {
@@ -18,6 +20,7 @@ export function AppLayout({
   blurPortfolio = false,
   blurProfile = false 
 }: AppLayoutProps) {
+  const { user, loading } = useAccount();
   return (
     <div className="flex min-h-screen flex-col">
       <nav className="px-6">
@@ -40,7 +43,7 @@ export function AppLayout({
               <Link href="/portfolio">
                 <Button 
                   variant={activeTab === "portfolio" ? "outline" : "ghost"} 
-                  className={`cursor-pointer ${blurPortfolio ? "blur-sm pointer-events-none" : ""}`}
+                  className={`cursor-pointer ${blurPortfolio || loading ? "blur-sm pointer-events-none" : ""}`}
                 >
                   Portfolio
                 </Button>
@@ -48,16 +51,22 @@ export function AppLayout({
             </div>
           </div>
           <div className="col-span-4 flex items-center justify-end gap-4">
-            <div className={`flex items-center gap-3 ${blurProfile ? "blur-sm" : ""}`}>
-              <span className="text-sm text-gray-400">@vcjohndoe</span>
+            <div className={`flex items-center gap-3 ${blurProfile || loading ? "blur-sm" : ""}`}>
+              <span className="text-sm text-gray-400">{user?.email ?? "loading..."}</span>
               <div className="relative">
-                <Image
-                  src="/generic-photo.png"
-                  alt="Profile"
-                  width={32}
-                  height={32}
-                  className="rounded-full shadow-[0_0_15px_rgba(59,130,246,0.6)]"
-                />
+                {user?.user_metadata.avatar_url && !loading ? (
+                  <Image
+                    src={user.user_metadata.avatar_url as string}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="rounded-full shadow-[0_0_15px_rgba(59,130,246,0.6)]"
+                  />
+                ) : (
+                  <div className="rounded-full shadow-[0_0_15px_rgba(59,130,246,0.6)] p-2 bg-neutral-800 border border-border text-neutral-400">
+                    <User size={20} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
