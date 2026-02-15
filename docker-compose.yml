@@ -15,7 +15,7 @@ services:
 
   api:
     build:
-      context: .
+      context: ./apps/api
       dockerfile: Dockerfile
     container_name: signalvc-api
     restart: unless-stopped
@@ -32,4 +32,4 @@ services:
       POSTGRES__HOST: ${POSTGRES__HOST}
       POSTGRES__PORT: 5432
     volumes:
-      - ./src:/app/src
+      - ./apps/api/src:/app/src

@@ -6,18 +6,70 @@ Welcome to the SignalVC monorepo. This codebase contains the web application, mo
 
 -   **`apps/web`**: Next.js application (Admin/User Dashboard).
 -   **`apps/mobile`**: Expo React Native application (iOS/Android).
+-   **`apps/api`**: Python FastAPI backend.
 -   **`packages/ui`**: Shared UI Component Library (Twin-Implementation).
 -   **`packages/*`**: Shared logic (domain, store, utilities).
--   **`api`**: Python FastAPI Backend.
 
-## Getting Started
+## Getting Started (Backend)
+
+
+### Running locally
+
+Running locally as fast as possbile requires having only `docker` and `docker-compose` installed. You can run the backend with:
+
+```bash
+# To run all services (API + Postgres)
+docker compose up 
+
+# To run only the API (Postgres must be running)
+docker compose up api
+
+# To run in detached mode
+docker compose up -d
+```
+
+### Installing locally
+
+The prequisites for running the backend locally are:
+-   **Python**: v3.12+
+-   **Poetry**: v1.8+
+-   **Pyenv**: v2.0+ (Recommended for managing Python versions)
+
+To install the backend locally you need a virtual environment with Python 3.13 and Poetry installed. Then, you can run the following commands:
+
+```bash
+
+# Create virtual environment with Python 3.13
+pyenv install 3.13.3
+pyenv virtualenv 3.13.3 signalvc-313
+
+# Activate virtual environment
+pyenv local signalvc-313
+
+# Install dependencies with Poetry
+pip install poetry
+
+# Install Python dependencies
+cd apps/api
+poetry install
+```
+
+Now you can run the API with:
+
+```bash
+./apps/api/scripts/run_local.sh
+```
+
+But running it with Docker is recommended as it closely mimics the production environment and requires less setup, its plug-and-play.
+
+
+## Getting Started (Web & Mobile)
 
 ### Prerequisites
 -   **Node.js**: v20+
 -   **pnpm**: v9+
--   **Python**: v3.11+ (for API)
 
-### Installation
+### Installation 
 
 ```bash
 # Install Node dependencies

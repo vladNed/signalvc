@@ -20,7 +20,7 @@ build/
 *.tsbuildinfo
 .nyc_output
 coverage/
-
+.ruff_cache/
 # Env files
 .env
 .env.*

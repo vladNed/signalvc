@@ -43,6 +43,7 @@ __pycache__/
 *.pyo
 .coverage
 .cache
+.ruff_cache/
 
 # Misc backups / temps
 *.orig
