@@ -29,15 +29,20 @@ class FeedRepository:
                     s.country_name,
                     s.region_name
                 FROM startup s
-                where s.founded_year is not null
+                LEFT JOIN swipe sw
+                    ON sw.startup_id = s.id
+                    AND sw.user_id = $1
+                WHERE
+                    s.founded_year IS NOT NULL
+                    AND sw.startup_id IS NULL
                 LIMIT 20
             )
             SELECT *
             FROM filtered
-            order by founded_year desc;
+            ORDER BY founded_year DESC;
         """
 
-        records = await self.db_conn.fetch(query)
+        records = await self.db_conn.fetch(query, user_id)
         return [schemas.feed.Startup(**dict(record)) for record in records]
 
     async def create_swipe(self, user_id: str, swipe: schemas.feed.SwipeRequest) -> dict[str, Any]:
