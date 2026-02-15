@@ -8,17 +8,17 @@ const getUserName = (user: User): string => {
   } else {
     return user.email ?? "Unknown User";
   }
-}
+};
 
 const getUserEmail = (user: User): string => {
   if (user.email) {
     return user.email;
   } else if (user.user_metadata.email) {
     return user.user_metadata.email as string;
-  } 
-  
-  return `temp@email.com`
-}
+  }
+
+  return `temp@email.com`;
+};
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -31,15 +31,23 @@ export async function GET(request: Request) {
 
     if (!error) {
       const user = data.user;
-      await supabase.from("profile").upsert({
-        id: user.id,
-        name: getUserName(user),
-        email: getUserEmail(user),
-        user_id: user.id,
-      });
+      const { error } = await supabase
+        .from("profile")
+        .upsert({
+          id: user.id,
+          name: getUserName(user),
+          email: getUserEmail(user),
+          user_id: user.id,
+        }, { onConflict: "id" })
+        .select("id");
+        
+
+      if (error) {
+        console.error("Failed to upsert user profile:", error);
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
-    
   }
 
   // If code exchange fails, redirect back to auth page with error

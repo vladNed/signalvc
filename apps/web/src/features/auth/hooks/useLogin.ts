@@ -52,6 +52,29 @@ export function useLogin() {
     setLoading(true);
     setError(null);
 
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      const user = session.user;
+      if (user.is_anonymous) {
+        const { data, error } = await supabase.auth.linkIdentity({
+          provider,
+          options: { 
+            redirectTo: `${window.location.origin}/auth/callback` 
+          },
+        });
+        if (error) {
+          setError(error.message);
+          setLoading(false);
+          return;
+        }
+        console.log("Redirect to provider for OAuth linking:", data.url);
+        window.location.href = data.url;
+        return;
+      }
+    }
+
     const { data, error: authError } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -63,7 +86,7 @@ export function useLogin() {
       setError(authError.message);
       setLoading(false);
       return;
-    } 
+    }
     window.location.href = data.url;
   }
 
