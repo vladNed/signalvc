@@ -1,7 +1,8 @@
-import asyncpg
+import logging
 import time
 from typing import Any
-import logging
+
+import asyncpg
 
 from api import schemas
 

@@ -3,6 +3,7 @@ Startup repository for data access operations.
 """
 
 from typing import Any
+
 import asyncpg
 
 

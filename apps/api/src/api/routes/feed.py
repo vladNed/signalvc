@@ -1,14 +1,14 @@
-from typing import Annotated
 import logging
 import time
-from api.repositories.feed import FeedRepository
-import fastapi
+from typing import Annotated
+
 import asyncpg
+import fastapi
 from pydantic import ValidationError
 
-from api import schemas, deps
+from api import deps, schemas
 from api.repositories import StartupRepository
-
+from api.repositories.feed import FeedRepository
 
 logger = logging.getLogger(__name__)
 router = fastapi.APIRouter()

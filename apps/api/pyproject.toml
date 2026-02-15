@@ -5,9 +5,7 @@ description = ""
 authors = ["Vlad Nedelcu <nedelcuvd@gmail.com>"]
 license = "Private"
 readme = "README.md"
-packages = [
-	{ include = "api", from = "src" },
-]
+packages = [{ include = "api", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -43,9 +41,7 @@ build-backend = "poetry.core.masonry.api"
 script_location = "%(here)s/migrations"
 
 # additional paths to be prepended to sys.path. defaults to the current working directory.
-prepend_sys_path = [
-    "."
-]
+prepend_sys_path = ["."]
 
 
 [[tool.alembic.post_write_hooks]]
@@ -64,3 +60,22 @@ options = "check --fix REVISION_SCRIPT_FILENAME"
 
 [tool.poetry.scripts]
 vc = "cli.main:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+exclude = ["scripts", "cli", "build", "dist"]
+
+[tool.ruff.lint]
+select = [
+    "I",    # isort
+    "E",    # pyflakes
+    "FAST", # FastAPI
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["api"]
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true

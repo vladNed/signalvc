@@ -1,13 +1,13 @@
-from typing import AsyncGenerator, Any
+import logging
+from typing import Any, AsyncGenerator
+
+import fastapi
+import supabase
 from asyncpg import Pool
 from asyncpg.pool import PoolConnectionProxy
-import fastapi
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-import supabase
-import logging
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from api.conf import settings
-
 
 security = HTTPBearer()
 logger = logging.getLogger("uvicorn")

@@ -1,8 +1,10 @@
 from typing import Annotated
 from uuid import UUID
+
+from pydantic import AfterValidator, BaseModel, BeforeValidator
+
 from api.schemas.base import SchemasBaseModel
 from api.schemas.constants import SwipeType
-from pydantic import BaseModel, BeforeValidator, AfterValidator
 
 from . import validators
 
