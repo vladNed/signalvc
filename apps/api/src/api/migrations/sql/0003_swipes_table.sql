@@ -1,8 +1,8 @@
 -- Create enum for swipes
-CREATE TYPE swipe_type AS ENUM ('bull', 'bear', 'add_to_portofolio');
+CREATE TYPE swipe_type AS ENUM ('bull', 'bear', 'portofolio');
 
 -- Create table for swipes
-CREATE TABLE IF NOT EXISTS swipes (
+CREATE TABLE IF NOT EXISTS swipe (
     id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES public.profile(id),
     startup_id UUID NOT NULL REFERENCES public.startup(id),
@@ -22,16 +22,16 @@ CREATE TABLE IF NOT EXISTS swipe_stats (
 );
 
 -- Create index for user_id
-CREATE INDEX IF NOT EXISTS idx_swipes_user_id ON swipes(user_id);
+CREATE INDEX IF NOT EXISTS idx_swipe_user_id ON swipe(user_id);
 
 -- Create index for startup_id
-CREATE INDEX IF NOT EXISTS idx_swipes_startup_id ON swipes(startup_id);
+CREATE INDEX IF NOT EXISTS idx_swipe_startup_id ON swipe(startup_id);
 
-alter table swipes enable row level security;
+alter table swipe enable row level security;
 ALTER TABLE swipe_stats ENABLE ROW LEVEL SECURITY;
 
--- Create write policy for swipes table
-CREATE POLICY write_swipes ON swipes FOR INSERT TO authenticated with check (true);
+-- Create write policy for swipe table
+CREATE POLICY write_swipe ON swipe FOR INSERT TO authenticated with check (true);
 
--- Create read policy for swipes table
-CREATE POLICY read_swipes ON swipes FOR SELECT TO authenticated USING (true);
+-- Create read policy for swipe table
+CREATE POLICY read_swipe ON swipe FOR SELECT TO authenticated USING (true);

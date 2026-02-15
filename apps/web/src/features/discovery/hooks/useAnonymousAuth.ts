@@ -32,6 +32,7 @@ export const useAnonymousAuth = () => {
 
         // Create profile for the anonymous user
         const { error: profileError } = await supabase.from("profile").insert({
+          id: data.user.id,
           name: "Anonymous User",
           email: `anonymous-${data.user.id}@temp.local`,
           user_id: data.user.id,

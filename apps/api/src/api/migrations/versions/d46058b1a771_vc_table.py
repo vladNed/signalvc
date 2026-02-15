@@ -10,7 +10,6 @@ from typing import Sequence, Union
 
 from alembic import op
 
-
 # revision identifiers, used by Alembic.
 revision: str = "d46058b1a771"
 down_revision: Union[str, Sequence[str], None] = "baba76b65da4"
@@ -20,7 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    with open("migrations/sql/0001_vc_table.sql", "r") as file:
+    with open("./src/api/migrations/sql/0001_vc_table.sql", "r") as file:
         sql_commands = file.read()
 
     op.execute(sql_commands)

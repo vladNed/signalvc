@@ -6,9 +6,9 @@ Create Date: 2026-01-27 16:14:54.503565
 
 """
 
-from alembic import op
 from typing import Sequence, Union
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "baba76b65da4"
@@ -19,7 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    with open("migrations/sql/0000_initial.sql", "r") as file:
+    with open("./src/api/migrations/sql/0000_initial.sql", "r") as file:
         sql_commands = file.read()
 
     op.execute(sql_commands)

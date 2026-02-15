@@ -19,7 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    with open("migrations/sql/0003_swipes_table.sql", "r") as file:
+    with open("./src/api/migrations/sql/0003_swipes_table.sql", "r") as file:
         sql_commands = file.read()
 
     op.execute(sql_commands)
@@ -27,6 +27,6 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.execute("DROP TABLE IF EXISTS swipes;")
-    op.execute("DROP TYPE IF EXISTS swipe_type;")
-    op.execute("DROP TABLE IF EXISTS swipe_stats;")
+    op.execute("DROP TABLE IF EXISTS swipe CASCADE;")
+    op.execute("DROP TYPE IF EXISTS swipe_type CASCADE;")
+    op.execute("DROP TABLE IF EXISTS swipe_stats CASCADE;")

@@ -72,6 +72,38 @@ class FeedRepository:
             """
             await self.db_conn.execute(insert_query, *swipe_records)
 
+            # Upsert swipe statistics: create row when missing, otherwise increment the
+            # appropriate counter column and update `updated_on`.
+            insert_stats_query = """
+                INSERT INTO swipe_stats (
+                    startup_id,
+                    bull_count,
+                    bear_count,
+                    add_count,
+                    created_on,
+                    updated_on
+                )
+                VALUES (
+                    $1,
+                    CASE WHEN $2 = 'bull' THEN 1 ELSE 0 END,
+                    CASE WHEN $2 = 'bear' THEN 1 ELSE 0 END,
+                    CASE WHEN $2 = 'portofolio' THEN 1 ELSE 0 END,
+                    CURRENT_TIMESTAMP,
+                    CURRENT_TIMESTAMP
+                )
+                ON CONFLICT (startup_id) DO UPDATE SET
+                    bull_count = swipe_stats.bull_count + EXCLUDED.bull_count,
+                    bear_count = swipe_stats.bear_count + EXCLUDED.bear_count,
+                    add_count = swipe_stats.add_count + EXCLUDED.add_count,
+                    updated_on = CURRENT_TIMESTAMP;
+            """
+
+            await self.db_conn.execute(
+                insert_stats_query,
+                str(swipe.startup_id),
+                swipe.swipe_type.value,
+            )
+
         processing_time_ms = (time.time() - start_time) * 1000
 
         logger.debug(
