@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Routes that don't require authentication
-const PUBLIC_ROUTES = ["/auth", "/auth/callback"];
+const PUBLIC_ROUTES = ["/auth", "/auth/callback", "/auth/verify", "/auth/confirm"];
 
 // Routes that require full authentication (no anonymous users)
 const AUTHENTICATED_ONLY_ROUTES = ["/feed", "/portfolio"];
