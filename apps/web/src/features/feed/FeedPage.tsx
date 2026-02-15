@@ -1,29 +1,18 @@
 "use client";
 
-import { useAnonymousAuth } from "./hooks/useAnonymousAuth";
+import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
 import {
   useFetchFeedQuery,
   useSwipeBearMutation,
   useSwipeBullMutation,
   useSwipePortfolioMutation,
 } from "@/shared/api";
-import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
 import { useMedia } from "@/shared/hooks";
 
-export default function DiscoveryPage() {
-  const { loading } = useAnonymousAuth();
-
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center text-white ">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
+export function FeedPage() {
   return (
-    <div className="h-screen text-white ">
-      <div className="py-10 h-full ">
+    <div className="h-screen text-white">
+      <div className="py-10 h-full">
         <div className="max-w-120 mx-auto  h-full grid grid-rows-12">
           <div className="row-span-11">
             <SwipeStack

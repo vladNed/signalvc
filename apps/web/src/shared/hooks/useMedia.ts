@@ -30,4 +30,4 @@ const useMedia = () => {
   };
 };
 
-export default useMedia;
+export { useMedia };
