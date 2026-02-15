@@ -39,6 +39,7 @@ export async function GET(request: Request) {
     });
 
     if (error) {
+      console.error("OTP verification failed:", error);
       return NextResponse.redirect(`${origin}/auth?error=auth_callback_failed`);
     }
 

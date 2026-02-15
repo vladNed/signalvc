@@ -17,16 +17,43 @@ export function useLogin() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: true },
-    });
-
-    if (error) {
-      setError(error.message);
+    try {
+      // Check if there's an existing anonymous session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user.is_anonymous) {
+        // Convert anonymous user to email user by updating with email
+        // This sends a verification email/OTP
+        const { error: updateError } = await supabase.auth.updateUser({ email });
+        
+        if (updateError) {
+          setError(updateError.message);
+          setLoading(false);
+          return;
+        }
+        
+        console.log("Verification email sent to convert anonymous user");
+      } else {
+        // Regular email OTP sign in for new or existing users
+        const { error: otpError } = await supabase.auth.signInWithOtp({
+          email,
+          options: { shouldCreateUser: true },
+        });
+        
+        if (otpError) {
+          setError(otpError.message);
+          setLoading(false);
+          return;
+        }
+      }
+      
+      setLoading(false);
+      router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "An error occurred";
+      setError(errorMessage);
+      setLoading(false);
     }
-    setLoading(false);
-    router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
   }
 
   async function signInWithOAuth(provider: OAuthProvider) {
