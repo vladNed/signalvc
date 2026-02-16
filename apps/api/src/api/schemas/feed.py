@@ -56,3 +56,4 @@ class Startup(SchemasBaseModel):
     founded_year: int | None
     country_name: str | None
     region_name: str | None
+    peer_score: float | None
