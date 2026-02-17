@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "sideEffects": false,
   "exports": {
+    ".": {
+      "react-native": "./src/index.ts",
+      "default": "./src/index.web.ts"
+    },
     "./package.json": "./package.json",
     "./src/components/*": "./src/components/*",
     "./tailwind.config": "./tailwind.config.ts",

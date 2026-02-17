@@ -1,8 +1,7 @@
 "use client";
 
-import { Button } from "@signalvc/ui/src/components/Button/index.web";
+import { Button, Input } from "@signalvc/ui";
 import { useLogin } from "./hooks/useLogin";
-import { Input } from "@signalvc/ui/src/components/Input/index.web";
 
 export default function AuthPage() {
   const { signInWithEmail, signInWithOAuth, loading, error, email, setEmail } = useLogin();

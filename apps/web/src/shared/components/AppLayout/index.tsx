@@ -1,10 +1,10 @@
 "use client";
 
 import { useAccount } from "@/shared/contexts/AccountContext";
-import { Button } from "@signalvc/ui/src/components/Button/index.web";
+import { Button } from "@signalvc/ui";
+import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { User } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface AppLayoutProps {
@@ -14,11 +14,11 @@ interface AppLayoutProps {
   blurProfile?: boolean;
 }
 
-export function AppLayout({ 
-  children, 
+export function AppLayout({
+  children,
   activeTab = "feed",
   blurPortfolio = false,
-  blurProfile = false 
+  blurProfile = false,
 }: AppLayoutProps) {
   const { user, loading } = useAccount();
   return (
@@ -33,16 +33,16 @@ export function AppLayout({
           <div className="col-span-4 flex items-center justify-center gap-4">
             <div className="flex items-center gap-2">
               <Link href="/feed">
-                <Button 
-                  variant={activeTab === "feed" ? "outline" : "ghost"} 
+                <Button
+                  variant={activeTab === "feed" ? "outline" : "ghost"}
                   className="cursor-pointer"
                 >
                   Feed
                 </Button>
               </Link>
               <Link href="/portfolio">
-                <Button 
-                  variant={activeTab === "portfolio" ? "outline" : "ghost"} 
+                <Button
+                  variant={activeTab === "portfolio" ? "outline" : "ghost"}
                   className={`cursor-pointer ${blurPortfolio || loading ? "blur-sm pointer-events-none" : ""}`}
                 >
                   Portfolio

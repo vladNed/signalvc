@@ -1,85 +1,17 @@
-import { baseApiInstance } from "@/shared/api";
-import type { Startup } from "@signalvc/types";
+import { baseApiInstance } from "@/shared/api/baseApi";
+import { feedQueryConfig, swipeMutationConfig } from "@signalvc/data-access";
+import type { Startup, SwipeType } from "@signalvc/types";
 
 const feedApi = baseApiInstance.injectEndpoints({
   endpoints: (builder) => ({
-    fetchFeed: builder.query<Startup[], void>({
-      query: () => "/feed",
-      providesTags: (results) =>
-        results
-          ? [
-              ...results.map(({ id }) => ({ type: "Startups" as const, id })),
-              { type: "Startups", id: "LIST" },
-            ]
-          : [{ type: "Startups", id: "LIST" }],
-    }),
-    swipeBull: builder.mutation<void, { startupId: string }>({
-      query: ({ startupId }) => ({
-        url: "/feed/swipe",
-        method: "POST",
-        body: {
-          swipeType: "bull",
-          startupId,
-        },
-      }),
-      invalidatesTags: (result, error, { startupId }) => [{ type: "Startups", id: startupId }],
+    fetchFeed: builder.query<Startup[], void>(feedQueryConfig),
+    swipe: builder.mutation<void, { startupId: string; swipeType: SwipeType }>({
+      ...swipeMutationConfig,
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const startupId = arg.startupId;
         const patchResult = dispatch(
-          feedApi.util.updateQueryData("fetchFeed", undefined, (draft) => {
-            const newDraft = draft.filter((s) => s.id !== startupId);
-            return newDraft;
-          }),
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          patchResult.undo();
-        }
-      },
-    }),
-    swipeBear: builder.mutation<void, { startupId: string }>({
-      query: ({ startupId }) => ({
-        url: "/feed/swipe",
-        method: "POST",
-        body: {
-          swipeType: "bear",
-          startupId,
-        },
-      }),
-      invalidatesTags: (result, error, { startupId }) => [{ type: "Startups", id: startupId }],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const startupId = arg.startupId;
-        const patchResult = dispatch(
-          feedApi.util.updateQueryData("fetchFeed", undefined, (draft) => {
-            const newDraft = draft.filter((s) => s.id !== startupId);
-            return newDraft;
-          }),
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          patchResult.undo();
-        }
-      },
-    }),
-    swipePortfolio: builder.mutation<void, { startupId: string }>({
-      query: ({ startupId }) => ({
-        url: "/feed/swipe",
-        method: "POST",
-        body: {
-          swipeType: "portofolio",
-          startupId,
-        },
-      }),
-      invalidatesTags: (result, error, { startupId }) => [{ type: "Startups", id: startupId }],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const startupId = arg.startupId;
-        const patchResult = dispatch(
-          feedApi.util.updateQueryData("fetchFeed", undefined, (draft) => {
-            const newDraft = draft.filter((s) => s.id !== startupId);
-            return newDraft;
-          }),
+          feedApi.util.updateQueryData("fetchFeed", undefined, (draft) =>
+            draft.filter((s) => s.id !== arg.startupId),
+          ),
         );
         try {
           await queryFulfilled;
@@ -91,9 +23,4 @@ const feedApi = baseApiInstance.injectEndpoints({
   }),
 });
 
-export const {
-  useFetchFeedQuery,
-  useSwipeBullMutation,
-  useSwipeBearMutation,
-  useSwipePortfolioMutation,
-} = feedApi;
+export const { useFetchFeedQuery, useSwipeMutation } = feedApi;

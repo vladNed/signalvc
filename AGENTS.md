@@ -61,6 +61,16 @@ Inside each feature/entity/shared module:
   - Focus on behavior (what the user sees), not implementation details.
 - **Data Validation**: Use Zod for runtime validation of external data (API responses, forms).
 
+## API Layer (Cross-Platform)
+
+We use **RTK Query** for all API communication. The API layer is split across three locations:
+
+- **`packages/services`** — Owns the `baseApi` factory function (`createApi` wrapper). Accepts `baseUrl` and `prepareHeaders` callback. Platform-agnostic.
+- **`packages/data-access`** — Owns **shared endpoint definitions** as plain builder functions: `(builder) => ({ ... })`. No platform-specific code. Both apps consume these.
+- **Each app's `shared/api/`** — Creates the platform-specific `baseApiInstance` (web uses Supabase SSR cookies; mobile will use SecureStore/AsyncStorage tokens), then injects the shared endpoints via `baseApiInstance.injectEndpoints({ endpoints: feedEndpoints })`.
+
+This keeps endpoint logic (URLs, request shapes, cache tags) in one shared place while allowing each platform to handle authentication differently. Platform-specific behavior like optimistic updates can be added at the app level when injecting.
+
 ## UI Component Framework
 
 We use a **Twin-Implementation Strategy** for cross-platform UI in `packages/ui`.

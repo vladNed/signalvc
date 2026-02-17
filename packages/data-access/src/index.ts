@@ -1,1 +1,1 @@
-export const helloDataAccess = () => "hello from data-access";
+export { feedQueryConfig, swipeMutationConfig } from "./endpoints/feedEndpoints";

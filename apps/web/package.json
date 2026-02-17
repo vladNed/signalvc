@@ -9,6 +9,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@signalvc/data-access": "workspace:*",
     "@signalvc/types": "workspace:*",
     "@signalvc/ui": "workspace:*",
     "@signalvc/services": "workspace:*",

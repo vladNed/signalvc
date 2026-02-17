@@ -1,18 +1,15 @@
-import { useState } from "react";
-import type { SwipeType, Startup } from "@signalvc/types";
-import { StartupCard } from "../StartupCard/index.web";
-import React from "react";
-import { TypedUseMutation, TypedUseQuery } from "@reduxjs/toolkit/query/react";
+import type { TypedUseMutation, TypedUseQuery } from "@reduxjs/toolkit/query/react";
+import type { Startup, SwipeType } from "@signalvc/types";
+import { MoveLeft, MoveRight, MoveUp } from "lucide-react";
+import React, { useState } from "react";
 import { Button } from "../Button/index.web";
+import { StartupCard } from "../StartupCard/index.web";
 import useGolderCard from "./hooks/useGolderCard";
 import useSwipe from "./hooks/useSwipe";
-import { MoveUp, MoveLeft, MoveRight } from "lucide-react";
 
 type SwipeStackProps = {
   onFetchFeed: TypedUseQuery<Startup[], void, any>;
-  useSwipeBullMutation: TypedUseMutation<void, { startupId: string }, any>;
-  useSwipeBearMutation: TypedUseMutation<void, { startupId: string }, any>;
-  useSwipePortfolioMutation: TypedUseMutation<void, { startupId: string }, any>;
+  useSwipeMutation: TypedUseMutation<void, { startupId: string; swipeType: SwipeType }, any>;
   useMedia: () => {
     isMobile: boolean;
     isTablet: boolean;
@@ -21,27 +18,15 @@ type SwipeStackProps = {
 };
 
 const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
-  (
-    {
-      onFetchFeed,
-      useSwipeBullMutation,
-      useSwipeBearMutation,
-      useSwipePortfolioMutation,
-      useMedia,
-    },
-    ref,
-  ) => {
+  ({ onFetchFeed, useSwipeMutation, useMedia }, ref) => {
     const [animatingDirection, setAnimatingDirection] = useState<SwipeType | null>(null);
     const { isGoldenStartup } = useGolderCard();
     const { data: startups, isLoading } = onFetchFeed();
     const { isDesktop } = useMedia();
-    const { handleSwipeAnimation, onBullSwipeHandler, onBearSwipeHandler, onPortfolioSwipeHandle } =
-      useSwipe(
-        setAnimatingDirection,
-        useSwipeBullMutation,
-        useSwipeBearMutation,
-        useSwipePortfolioMutation,
-      );
+    const { handleSwipeAnimation, onSwipeHandler } = useSwipe(
+      setAnimatingDirection,
+      useSwipeMutation,
+    );
 
     if (isLoading) {
       return (
@@ -108,23 +93,23 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
           <div className="grid items-center justify-center gap-4 mt-6 grid-cols-12 w-full h-20">
             <Button
               className="cursor-pointer hover:bg-sentiment-bear/40 flex-col text-sentiment-bear col-span-3 bg-sentiment-bear/30 border border-sentiment-bear rounded-lg items-center flex justify-center h-full"
-              onClick={() => onBearSwipeHandler(startups![0].id)}
+              onClick={() => onSwipeHandler(startups![0].id, "bear")}
               variant="feed"
             >
               <p>BEAR</p>
               <MoveLeft size={16} />
             </Button>
-            <Button 
+            <Button
               className="cursor-pointer hover:bg-sentiment-portfolio/40 flex-col text-sentiment-portfolio col-span-6 bg-sentiment-portfolio/30 border border-sentiment-portfolio rounded-lg items-center flex justify-center h-full"
-              onClick={() => onPortfolioSwipeHandle(startups![0].id)}
+              onClick={() => onSwipeHandler(startups![0].id, "portfolio")}
               variant="feed"
             >
               <MoveUp size={16} />
               <p>SAVE</p>
             </Button>
-            <Button 
+            <Button
               className="cursor-pointer hover:bg-sentiment-bull/40 flex-col text-sentiment-bull col-span-3 bg-sentiment-bull/30 border border-sentiment-bull rounded-lg items-center flex justify-center h-full"
-              onClick={() => onBullSwipeHandler(startups![0].id)}
+              onClick={() => onSwipeHandler(startups![0].id, "bull")}
               variant="feed"
             >
               <p>BULL</p>

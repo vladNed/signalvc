@@ -1,14 +1,9 @@
 "use client";
 
-import { useAnonymousAuth } from "./hooks/useAnonymousAuth";
-import {
-  useFetchFeedQuery,
-  useSwipeBearMutation,
-  useSwipeBullMutation,
-  useSwipePortfolioMutation,
-} from "@/shared/api";
-import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
+import { useFetchFeedQuery, useSwipeMutation } from "@/shared/api";
 import { useMedia } from "@/shared/hooks";
+import { SwipeStack } from "@signalvc/ui";
+import { useAnonymousAuth } from "./hooks/useAnonymousAuth";
 
 export default function DiscoveryPage() {
   const { loading } = useAnonymousAuth();
@@ -28,9 +23,7 @@ export default function DiscoveryPage() {
           <div className="row-span-11">
             <SwipeStack
               onFetchFeed={useFetchFeedQuery}
-              useSwipeBearMutation={useSwipeBearMutation}
-              useSwipeBullMutation={useSwipeBullMutation}
-              useSwipePortfolioMutation={useSwipePortfolioMutation}
+              useSwipeMutation={useSwipeMutation}
               useMedia={useMedia}
             />
           </div>
