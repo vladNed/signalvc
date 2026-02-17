@@ -236,6 +236,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.11.2
         version: 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1))(react@19.2.3)
+      '@signalvc/data-access':
+        specifier: workspace:*
+        version: link:../../packages/data-access
       '@signalvc/services':
         specifier: workspace:*
         version: link:../../packages/services
@@ -298,7 +301,11 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  packages/data-access: {}
+  packages/data-access:
+    dependencies:
+      '@signalvc/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/eslint-config:
     dependencies:

@@ -1,3 +1,4 @@
 export { default as AuthPage } from "./AuthPage";
-export { useLogin } from "./hooks/useLogin";
-
+export { getUserEmail, getUserName } from "./utils/profileHelpers";
+export { upsertProfile } from "./utils/upsertProfile";
+export { VerifyPage } from "./VerifyPage";

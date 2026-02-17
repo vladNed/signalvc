@@ -1,25 +1,7 @@
-import { NextResponse } from "next/server";
+import { upsertProfile } from "@/features/auth";
 import { createClient } from "@/shared/supabase/server";
-import type { EmailOtpType, User } from "@supabase/supabase-js";
-
-const getUserName = (user: User): string => {
-  if (user.user_metadata.full_name) {
-    return user.user_metadata.full_name as string;
-  } else {
-    return user.email ?? "Unknown User";
-  }
-};
-
-const getUserEmail = (user: User): string => {
-  if (user.email) {
-    return user.email;
-  } else if (user.user_metadata.email) {
-    return user.user_metadata.email as string;
-  }
-
-  return `temp@email.com`;
-};
-
+import type { EmailOtpType } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -35,7 +17,7 @@ export async function GET(request: Request) {
   try {
     const { data, error } = await supabase.auth.verifyOtp({
       token_hash: tokenHash,
-      type: type as EmailOtpType
+      type: type as EmailOtpType,
     });
 
     if (error) {
@@ -48,19 +30,7 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/feed`);
     }
 
-    const { error: updateProfileError } = await supabase
-      .from("profile")
-      .upsert({
-        id: user.id,
-        name: getUserName(user),
-        email: getUserEmail(user),
-        user_id: user.id,
-      }, { onConflict: "id" })
-      .select("id");
-
-    if (updateProfileError) {
-      console.error("Failed to upsert user profile:", updateProfileError);
-    } 
+    await upsertProfile(supabase, user);
 
     return NextResponse.redirect(`${origin}/feed`);
   } catch (error) {
@@ -68,5 +38,4 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.redirect(`${origin}/auth?token_hash=${tokenHash}&type=${type}`);
-
 }

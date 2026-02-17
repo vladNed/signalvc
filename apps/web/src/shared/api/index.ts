@@ -1,7 +1,2 @@
 export { baseApiInstance } from "./baseApi";
-export {
-  useFetchFeedQuery,
-  useSwipeBullMutation,
-  useSwipeBearMutation,
-  useSwipePortfolioMutation,
-} from "./feedApi";
+export { useFetchFeedQuery, useSwipeMutation } from "./feedApi";

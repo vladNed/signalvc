@@ -1,13 +1,8 @@
 "use client";
 
-import { SwipeStack } from "@signalvc/ui/src/components/SwipeStack/index.web";
-import {
-  useFetchFeedQuery,
-  useSwipeBearMutation,
-  useSwipeBullMutation,
-  useSwipePortfolioMutation,
-} from "@/shared/api";
+import { useFetchFeedQuery, useSwipeMutation } from "@/shared/api";
 import { useMedia } from "@/shared/hooks";
+import { SwipeStack } from "@signalvc/ui";
 
 export function FeedPage() {
   return (
@@ -17,9 +12,7 @@ export function FeedPage() {
           <div className="row-span-11">
             <SwipeStack
               onFetchFeed={useFetchFeedQuery}
-              useSwipeBearMutation={useSwipeBearMutation}
-              useSwipeBullMutation={useSwipeBullMutation}
-              useSwipePortfolioMutation={useSwipePortfolioMutation}
+              useSwipeMutation={useSwipeMutation}
               useMedia={useMedia}
             />
           </div>
