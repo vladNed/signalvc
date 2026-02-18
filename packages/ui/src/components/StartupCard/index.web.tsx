@@ -104,8 +104,8 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
                 </p>
               </div>
               <div className="text-sm text-accent-foreground flex items-center gap-2">
-                <ChartColumnStacked size={18} className="inline-block ml-1" />
                 {startup.businessCategory}
+                <ChartColumnStacked size={18} className="inline-block ml-1" />
               </div>
             </div>
             <div className="row-span-1 flex items-center gap-4">
