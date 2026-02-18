@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Startup, SwipeType } from "@signalvc/types";
 import useSwipeGesture from "./hooks/useSwipeGesture";
+import { ChartColumnStacked, Landmark, MapPin, PinIcon, TrendingDown, TrendingUp } from "lucide-react";
 
 type StartupCardProps = {
   startup: Startup;
@@ -14,7 +15,7 @@ type StartupCardProps = {
 
 // TODO: Move this to utils
 const getScoreColor = (score: number) => {
-  if (score >= 70) return "text-emerald-400";
+  if (score >= 30) return "text-emerald-400";
   if (score >= 50) return "text-yellow-400";
   return "text-red-400";
 };
@@ -49,7 +50,7 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
       ? `translate(${offset.x}px, ${offset.y}px) rotate(${rotation}deg)`
       : "translate(0, 0) rotate(0deg)";
 
-    const opacity = isDragging ? 1 - Math.abs(offset.x) / 900 : 1;
+    const opacity = isDragging ? 1 : 1;
 
     return (
       <div
@@ -62,14 +63,14 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
         {...handlers}
       >
         {nextCardIsGolden && isTop && (
-          <div className="absolute -inset-2 rounded-lg bg-gradient-to-b from-yellow-500/20 to-amber-600/20 blur-xl animate-pulse pointer-events-none -z-10" />
+          <div className="absolute -inset-2 rounded-xl bg-gradient-to-b from-yellow-500/20 to-amber-600/20 blur-xl animate-pulse pointer-events-none -z-10" />
         )}
 
         <div
-          className={`relative h-full w-full rounded-lg overflow-hidden ${
+          className={`relative max-h-200 h-full w-full rounded-2xl overflow-hidden ${
             isGolden
               ? "bg-gradient-to-b from-startupCard-goldenFrom to-startupCard-goldenTo border-2 border-startupCard-goldenBorder shadow-golden"
-              : "bg-gradient-to-b from-startupCard-darkFrom to-startupCard-darkTo border border-startupCard-border shadow-dark"
+              : "backdrop-blur-xl border border-neutral-800 bg-background/30 shadow-dark"
           }`}
         >
           {(isDragging || hoverDirection) && (
@@ -86,99 +87,73 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
               )}
               {(hoverDirection === "portfolio" ||
                 (isDragging && offset.y < -50 && Math.abs(offset.y) > Math.abs(offset.x))) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-sentiment-neutral/30 pointer-events-none z-50">
-                  <span className="text-6xl font-bold text-sentiment-neutral">PORTFOLIO</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-sentiment-portfolio/30 pointer-events-none z-50">
+                  <span className="text-6xl font-bold text-sentiment-portfolio">SAVE</span>
                 </div>
               )}
             </>
           )}
 
-          <div className="relative h-full w-full grid grid-rows-12 p-4">
-            <div className="row-span-1 flex justify-between">
-              <div className="flex items-start gap-2">
+          {/* BODY */}
+          <div className="relative h-full w-full grid grid-rows-12 p-8 gap-4">
+            <div className="row-span-1 flex items-center justify-between">
+              <div className="flex items-center">
+                <MapPin size={18} className="text-accent-foreground" />
+                <p className="text-sm text-accent-foreground ml-2">
+                  {startup.countryName} - {startup.regionName ? startup.regionName : "N/A"}
+                </p>
+              </div>
+              <div className="text-sm text-accent-foreground flex items-center gap-2">
+                <ChartColumnStacked size={18} className="inline-block ml-1" />
+                {startup.businessCategory}
+              </div>
+            </div>
+            <div className="row-span-1 flex items-center gap-4">
+              <div className="bg-accent/30 border border-accent p-4 items-center justify-center rounded-full">
+                <Landmark size={25} />
+              </div>
+              <h2 className="text-3xl font-semibold tracking-tight flex">
+                {startup.operationalName}
+              </h2>
+            </div>
+            <div className="row-span-4">
+              <p className="text-lg text-start line-clamp-8">{startup.description}</p>
+            </div>
+            <div className="row-span-1 flex items-center gap-2 overflow-x-scroll overflow-y-hidden scrollbar-thin scrollbar-thumb-accent scrollbar-track-background">
+              {startup.targetMarkets.map((market) => (
                 <span
-                  className={`px-4 py-2 text-xs font-medium text-white rounded-md border ${
-                    isGolden
-                      ? "bg-startupCard-goldenTagBg border-startupCard-goldenBorder"
-                      : "bg-startupCard-tagBg border-startupCard-tagBorder"
-                  }`}
+                  key={market}
+                  className="whitespace-nowrap px-4 py-2 border-accent border bg-accent/30 rounded-full text-md font-medium"
                 >
-                  {startup.targetMarkets[0]}
+                  {market}
                 </span>
-              </div>
-              <div className="flex items-start">
-                <div
-                  className={`px-4 py-2 text-xs font-medium text-white rounded-md border ${
-                    isGolden
-                      ? "bg-startupCard-goldenTagBg border-startupCard-goldenBorder"
-                      : "bg-startupCard-tagBg border-startupCard-tagBorder"
-                  }`}
-                >
-                  John Doe
-                  {/* TODO: We need to fetch the actual founder's name */}
+              ))}
+            </div>
+            <div className="row-span-2 grid grid-cols-2 gap-4">
+              <div className="col-span-1 flex border-accent bg-accent/30 border rounded-xl p-4 flex-col justify-between">
+                <div className="text-sm text-accent-foreground flex items-center gap-2">
+                  <TrendingUp size={18} className="inline-block ml-1" />
+                  <span className="">Current Valuation</span>
                 </div>
+                <div className="text-4xl font-bold ">$12M</div>
+              </div>
+              <div className="col-span-1 flex border-accent bg-accent/30 border rounded-xl p-4 flex-col justify-between">
+                <div className="text-sm text-accent-foreground flex items-center gap-2">
+                  <Landmark size={18} className="inline-block ml-1" />
+                  <span className="">Founded In</span>
+                </div>
+                <div className="text-4xl font-bold ">{startup.foundedYear}</div>
               </div>
             </div>
-            <div className="row-span-2 flex flex-col items-center justify-between">
-              <div className="text-center py-4">
-                <h2 className="text-3xl font-semibold text-white tracking-tight">
-                  {startup.operationalName}
-                </h2>
-              </div>
-              <div
-                className={`border rounded-md p-3 text-center ${
-                  isGolden
-                    ? "border-startupCard-goldenBorder bg-startupCard-goldenTagBg"
-                    : "border-startupCard-infoBoxBorder bg-startupCard-infoBoxBg"
-                }`}
-              >
-                <p className="font-semibold text-sm leading-relaxed">{startup.description}</p>
-              </div>
-            </div>
-            <div className="row-span-7 flex-1 flex items-center justify-center relative">
-              <div
-                className={`rounded-full right-15 w-56 h-56 absolute flex items-center justify-center ${
-                  isGolden
-                    ? "bg-startupCard-scoreCircleGoldenBg shadow-scoreCircleGolden"
-                    : "bg-startupCard-scoreCircleBg shadow-scoreCircle"
-                }`}
-              >
-                <div className="text-center">
-                  <div className={`text-4xl font-medium ${getScoreColor(99)}`}>{99}</div>
-                  <div className="text-sm text-white/90 mt-2 font-semibold">Bull/Bear Score</div>
-                  <div
-                    className={`text-xs mt-1 font-semibold ${getSentimentColor("Very Bullish")}`}
-                  >
-                    {/* TODO: display the actual sentiment */}
-                    {"Very Bullish"}
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className={`h-35 w-35 rounded-full absolute left-13 top-72 -translate-y-1/2 flex items-center justify-center ${
-                  isGolden
-                    ? "bg-startupCard-peerCircleGoldenBg shadow-peerCircleGolden"
-                    : "bg-startupCard-peerCircleBg shadow-peerCircle"
-                }`}
-              >
-                <div className="text-center">
-                  {/* TODO: Fetch and display the actual peer score */}
-                  <div className="text-3xl font-medium text-white">{99}</div>
-                  <div className="text-xs text-white mt-1 font-medium">Peer Score</div>
-                </div>
-              </div>
-            </div>
-            <div className="row-span-2 w-full gap-4 grid grid-cols-2 p-3">
-              <div className="flex flex-col justify-end col-span-1 gap-4">
-                {/* TODO: Fetch and display the actual MRR */}
-                <div className="text-lg text-blue-200/50 mb-1 font-medium">MRR</div>
-                <div className="text-4xl font-medium text-white">$NaN</div>
-              </div>
-              <div className="flex flex-col items-end justify-end col-span-1 gap-4">
-                {/* TODO: Fetch and display the actual ticket size */}
-                <div className="text-lg text-blue-200/50 mb-1 font-medium">Ticket Size</div>
-                <div className="text-4xl font-medium text-white">$NaN</div>
+            <div className="row-span-3 border border-accent rounded-xl bg-accent/30 flex flex-col items-center justify-center p-4 gap-4 overflow-hidden">
+              <span className="text-md text-accent-foreground">Peer Score</span>
+              <div className={`flex items-center text-5xl font-bold ${getScoreColor(startup.peerScore)}`}>
+                {startup.peerScore.toFixed(2)}
+                {startup.peerScore >= 30 ? (
+                  <span className="text-sm text-emerald-400 ml-2"><TrendingUp size={30} /></span>
+                ) : (
+                  <span className="text-sm text-red-400 ml-2"><TrendingDown size={30} /></span>
+                )}
               </div>
             </div>
           </div>

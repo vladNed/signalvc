@@ -34,7 +34,7 @@ export function AppLayout({
             <div className="flex items-center gap-2">
               <Link href="/feed">
                 <Button
-                  variant={activeTab === "feed" ? "outline" : "ghost"}
+                  variant={activeTab === "feed" ? "feed" : "feedInactive"}
                   className="cursor-pointer"
                 >
                   Feed
@@ -42,7 +42,7 @@ export function AppLayout({
               </Link>
               <Link href="/portfolio">
                 <Button
-                  variant={activeTab === "portfolio" ? "outline" : "ghost"}
+                  variant={activeTab === "portfolio" ? "feed" : "feedInactive"}
                   className={`cursor-pointer ${blurPortfolio || loading ? "blur-sm pointer-events-none" : ""}`}
                 >
                   Portfolio

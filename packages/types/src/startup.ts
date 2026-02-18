@@ -6,6 +6,9 @@ export type Startup = {
   businessCategory: string;
   employeeCount: number;
   foundedYear: number;
+  countryName: string;
+  regionName: string;
+  peerScore: number;
 };
 
 export type SwipeType = "bear" | "bull" | "portfolio" | null;

@@ -37,7 +37,7 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
     }
 
     return (
-      <div className="flex flex-col items-center w-full max-w-md mx-auto h-full py-4">
+      <div className="flex flex-col items-center w-full max-w-lg mx-auto h-full py-4">
         <div className="relative w-full h-full">
           {!startups || startups.length === 0 ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0e] rounded-2xl p-8 text-center shadow-lg shadow-black/40">

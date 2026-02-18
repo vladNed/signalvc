@@ -9,10 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#09090b", // Deep charcoal/black
+        background: "#171717", 
         foreground: "#fafafa",
         primary: {
-          DEFAULT: "#2563eb", // Electric Blue
+          DEFAULT: "#615fff", 
           foreground: "#ffffff",
         },
         secondary: {
@@ -24,8 +24,8 @@ const config: Config = {
           foreground: "#a1a1aa",
         },
         accent: {
-          DEFAULT: "#27272a",
-          foreground: "#fafafa",
+          DEFAULT: "#1E3A8A",
+          foreground: "#a3b3ff",
         },
         destructive: {
           DEFAULT: "#ef4444",
@@ -37,7 +37,7 @@ const config: Config = {
           darkTo: "#010924",
           goldenFrom: "#4A3B1A",
           goldenTo: "#1F1708",
-          border: "#06123D",
+          border: "#372aac90",
           goldenBorder: "rgba(202, 138, 4, 0.5)",
           tagBg: "rgba(30, 58, 138, 0.2)",
           tagBorder: "rgba(49, 46, 129, 0.44)",
@@ -66,7 +66,7 @@ const config: Config = {
       },
       boxShadow: {
         golden: "0 0 60px rgba(234, 179, 8, 0.6)",
-        dark: "0 0 40px rgba(79, 70, 229, 0.3)",
+        dark: "0 0 40px rgba(79, 70, 229, 0.2)",
         scoreCircle: "0 0 60px rgba(79, 70, 229, 0.6), inset 0 0 20px rgba(79, 70, 229)",
         scoreCircleGolden: "0 0 60px rgba(234, 179, 8, 0.6), inset 0 0 20px rgba(234, 179, 8)",
         peerCircle: "0 0 60px rgba(79, 70, 229, 0.6), inset 0 0 20px rgba(79, 70, 229)",

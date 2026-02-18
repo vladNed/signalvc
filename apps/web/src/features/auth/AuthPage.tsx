@@ -7,7 +7,7 @@ export default function AuthPage() {
   const { signInWithEmail, signInWithOAuth, loading, error, email, setEmail } = useLogin();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-foreground">
+    <div className="flex min-h-screen flex-col items-center justify-center ">
       <div className="w-full max-w-sm space-y-6">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold tracking-tighter">Welcome to SignalVC</h1>
