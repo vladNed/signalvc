@@ -57,7 +57,7 @@ export default function AuthPage() {
             <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-gray-400">Or</span>
+            <span className="bg-background px-2 text-muted-foreground">Or</span>
           </div>
         </div>
         <div className="space-y-4">

@@ -24,15 +24,15 @@ export function HeroSection() {
               <span className="text-xs font-mono text-primary/70">Live Beta — Batch #01</span>
             </div>
 
-            <h1 className="text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+            <h1 className="text-5xl lg:text-6xl font-black text-foreground leading-[1.1] tracking-tight">
               Swipe on the next{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
                 unicorn
               </span>
             </h1>
 
-            <p className="text-lg text-neutral-400 max-w-md leading-relaxed">
-              SignalVC is <strong className="text-white">Tinder for venture capital</strong>.
+            <p className="text-lg text-body max-w-md leading-relaxed">
+              SignalVC is <strong className="text-foreground">Tinder for venture capital</strong>.
               Swipe through curated startups, score conviction, and build your portfolio in seconds.
             </p>
 
@@ -45,7 +45,7 @@ export function HeroSection() {
               </Link>
               <Link
                 href="/discover"
-                className="px-6 py-3 text-sm font-medium text-neutral-400 border border-neutral-800 rounded-lg hover:border-neutral-700 hover:text-white transition-colors"
+                className="px-6 py-3 text-sm font-medium text-body border border-border rounded-lg hover:border-border hover:text-foreground transition-colors"
               >
                 Try Anonymous
               </Link>

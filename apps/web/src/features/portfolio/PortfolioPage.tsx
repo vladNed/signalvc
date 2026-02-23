@@ -22,7 +22,7 @@ export function PortfolioPage() {
   }, [search]);
 
   return (
-    <div className="h-full text-white">
+    <div className="h-full text-foreground">
       <div className="py-8 max-w-3xl mx-auto px-4 space-y-6">
         <PortfolioHeader search={search} onSearchChange={setSearch} />
         <PortfolioStats startups={MOCK_PORTFOLIO} />
@@ -43,7 +43,7 @@ export function PortfolioPage() {
             </motion.div>
           ))}
           {filtered.length === 0 && (
-            <p className="text-center text-neutral-600 py-12">No startups match your search.</p>
+            <p className="text-center text-faint py-12">No startups match your search.</p>
           )}
         </div>
       </div>

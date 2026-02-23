@@ -11,7 +11,7 @@ const stats = [
 
 export function StatsBar() {
   return (
-    <section className="py-16 px-6 border-y border-neutral-800/30">
+    <section className="py-16 px-6 border-y border-border-light">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -22,8 +22,8 @@ export function StatsBar() {
         >
           {stats.map((s) => (
             <div key={s.label} className="text-center space-y-1">
-              <div className="text-3xl font-black text-white">{s.value}</div>
-              <div className="text-xs font-mono text-neutral-500 uppercase tracking-wider">
+              <div className="text-3xl font-black text-foreground">{s.value}</div>
+              <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
                 {s.label}
               </div>
             </div>

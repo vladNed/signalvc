@@ -14,9 +14,9 @@ type PortfolioCardProps = {
 
 function InfoBox({ label, value, valueColor }: { label: string; value: string; valueColor?: string }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-neutral-800/50 bg-white/[0.03]">
-      <span className="text-sm text-neutral-500">{label}</span>
-      <span className={`text-lg font-bold ${valueColor ?? "text-white"}`}>{value}</span>
+    <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-border bg-glass">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className={`text-lg font-bold ${valueColor ?? "text-foreground"}`}>{value}</span>
     </div>
   );
 }
@@ -40,7 +40,7 @@ export function PortfolioCard({ startup, defaultExpanded = false }: PortfolioCar
 
   return (
     <div
-      className={`group w-full rounded-2xl backdrop-blur-xl border border-neutral-800/50 bg-[#0c0c18]/60 overflow-hidden transition-all duration-300 border-l-2 ${getAccentBorderColor(startup.sentiment)} hover:shadow-[0_0_30px_rgba(97,95,255,0.08)]`}
+      className={`group w-full rounded-2xl backdrop-blur-xl border border-border bg-surface-60 overflow-hidden transition-all duration-300 border-l-2 ${getAccentBorderColor(startup.sentiment)} hover:shadow-[0_0_30px_rgba(97,95,255,0.08)]`}
     >
       {/* Header */}
       <button
@@ -48,12 +48,12 @@ export function PortfolioCard({ startup, defaultExpanded = false }: PortfolioCar
         className="w-full flex items-center justify-between px-6 py-4 cursor-pointer"
       >
         <div className="flex items-center gap-4 min-w-0">
-          <h3 className="text-xl font-bold text-white truncate">{startup.operationalName}</h3>
+          <h3 className="text-xl font-bold text-foreground truncate">{startup.operationalName}</h3>
           <div className="flex items-center gap-2 flex-shrink-0">
             {startup.targetMarkets.map((market) => (
               <span
                 key={market}
-                className="px-3 py-1 text-xs rounded-full border border-primary/20 bg-primary/5 text-neutral-400 backdrop-blur"
+                className="px-3 py-1 text-xs rounded-full border border-primary/20 bg-primary/5 text-body backdrop-blur"
               >
                 {market}
               </span>
@@ -61,14 +61,14 @@ export function PortfolioCard({ startup, defaultExpanded = false }: PortfolioCar
           </div>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-neutral-800/50 bg-white/[0.03] text-sm text-neutral-400">
+          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-glass text-sm text-body">
             <span>{flag}</span>
             {startup.countryName}
           </span>
           {expanded ? (
-            <ChevronUp size={20} className="text-neutral-500" />
+            <ChevronUp size={20} className="text-muted-foreground" />
           ) : (
-            <ChevronDown size={20} className="text-neutral-500" />
+            <ChevronDown size={20} className="text-muted-foreground" />
           )}
         </div>
       </button>
@@ -89,7 +89,7 @@ export function PortfolioCard({ startup, defaultExpanded = false }: PortfolioCar
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 }}
-                className="text-sm text-neutral-500"
+                className="text-sm text-muted-foreground"
               >
                 Est. {startup.foundedYear}
               </motion.p>
@@ -132,9 +132,9 @@ export function PortfolioCard({ startup, defaultExpanded = false }: PortfolioCar
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="rounded-xl border border-neutral-800/50 bg-white/[0.03] px-5 py-4"
+                className="rounded-xl border border-border bg-glass px-5 py-4"
               >
-                <p className="text-sm text-neutral-400 text-center leading-relaxed">
+                <p className="text-sm text-body text-center leading-relaxed">
                   {startup.description}
                 </p>
               </motion.div>

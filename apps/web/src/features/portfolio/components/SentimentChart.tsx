@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
 type SentimentChartProps = {
   data: { month: string; value: number }[];
@@ -17,7 +17,7 @@ function getChartColor(sentiment: number) {
 export function SentimentChart({ data, sentiment, sentimentTrend }: SentimentChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
+  const drawChart = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -45,8 +45,11 @@ export function SentimentChart({ data, sentiment, sentimentTrend }: SentimentCha
 
     const colors = getChartColor(sentiment);
 
+    // Read the grid line color from CSS variable for theme support
+    const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--color-grid-line').trim() || "rgba(255, 255, 255, 0.04)";
+
     // Subtle horizontal grid lines
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+    ctx.strokeStyle = gridColor;
     ctx.lineWidth = 1;
     for (let i = 0; i <= 4; i++) {
       const y = paddingTop + (chartHeight / 4) * i;
@@ -133,19 +136,34 @@ export function SentimentChart({ data, sentiment, sentimentTrend }: SentimentCha
     });
   }, [data, sentiment]);
 
+  useEffect(() => {
+    drawChart();
+
+    // Watch for theme changes (class attribute on <html>) to redraw the chart
+    const observer = new MutationObserver(() => {
+      drawChart();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [drawChart]);
+
   const trendColor = sentimentTrend >= 0 ? "text-emerald-400" : "text-red-400";
   const trendPrefix = sentimentTrend >= 0 ? "\u2191" : "\u2193";
 
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-neutral-500">Sentiment Over Time</span>
+        <span className="text-sm text-muted-foreground">Sentiment Over Time</span>
         <div className="flex items-center gap-2">
           <span className={`text-xs ${trendColor}`}>
             {trendPrefix}
             {Math.abs(sentimentTrend)}%
           </span>
-          <span className="text-xl font-bold text-white">{sentiment}%</span>
+          <span className="text-xl font-bold text-foreground">{sentiment}%</span>
         </div>
       </div>
       <div className="w-full h-32">

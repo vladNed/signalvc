@@ -17,7 +17,7 @@ export function CTASection() {
           {/* Glow behind */}
           <div className="absolute left-1/2 -translate-x-1/2 w-80 h-80 bg-primary/8 rounded-full blur-[100px] pointer-events-none" />
 
-          <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight relative">
+          <h2 className="text-4xl lg:text-5xl font-black text-foreground leading-tight relative">
             Stop scrolling spreadsheets.
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
@@ -25,7 +25,7 @@ export function CTASection() {
             </span>
           </h2>
 
-          <p className="text-neutral-500 max-w-md mx-auto">
+          <p className="text-muted-foreground max-w-md mx-auto">
             Join the first batch of VCs using swipe-powered deal flow.
             Limited to 500 seats.
           </p>
@@ -39,7 +39,7 @@ export function CTASection() {
             </Link>
             <Link
               href="/discover"
-              className="px-8 py-3.5 text-sm font-medium text-neutral-400 border border-neutral-800 rounded-lg hover:border-neutral-700 hover:text-white transition-colors"
+              className="px-8 py-3.5 text-sm font-medium text-body border border-border rounded-lg hover:border-border hover:text-foreground transition-colors"
             >
               Try Without Account
             </Link>

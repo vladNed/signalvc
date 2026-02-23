@@ -38,7 +38,7 @@ export function HowItWorksSection() {
           <span className="text-[10px] uppercase tracking-widest font-mono text-primary/40">
             How It Works
           </span>
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mt-3">
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-3">
             Three steps to conviction
           </h2>
         </motion.div>
@@ -51,7 +51,7 @@ export function HowItWorksSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="relative bg-[#0c0c18]/60 backdrop-blur border border-neutral-800/50 rounded-2xl p-6 space-y-4"
+              className="relative bg-surface-60 backdrop-blur border border-border rounded-2xl p-6 space-y-4"
             >
               <span className="text-[40px] font-black text-primary/10 absolute top-4 right-5 leading-none">
                 {s.step}
@@ -59,8 +59,8 @@ export function HowItWorksSection() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <s.icon size={22} className="text-primary/70" />
               </div>
-              <h3 className="text-xl font-bold text-white">{s.title}</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">{s.description}</p>
+              <h3 className="text-xl font-bold text-foreground">{s.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
             </motion.div>
           ))}
         </div>

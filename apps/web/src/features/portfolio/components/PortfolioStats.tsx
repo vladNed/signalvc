@@ -35,7 +35,7 @@ export function PortfolioStats({ startups }: PortfolioStatsProps) {
       icon: Star,
       label: "Top Performer",
       value: topPerformer?.operationalName ?? "—",
-      accent: "text-white",
+      accent: "text-foreground",
     },
   ];
 
@@ -47,11 +47,11 @@ export function PortfolioStats({ startups }: PortfolioStatsProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: i * 0.1 }}
-          className="bg-[#0c0c18]/60 backdrop-blur border border-neutral-800/50 rounded-2xl p-4 space-y-2"
+          className="bg-surface-60 backdrop-blur border border-border rounded-2xl p-4 space-y-2"
         >
           <div className="flex items-center gap-2">
-            <s.icon size={14} className="text-neutral-500" />
-            <span className="text-[10px] uppercase tracking-widest font-mono text-neutral-500">
+            <s.icon size={14} className="text-muted-foreground" />
+            <span className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground">
               {s.label}
             </span>
           </div>

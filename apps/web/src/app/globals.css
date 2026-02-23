@@ -7,9 +7,77 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  --color-page-bg: #f8f9fc;
+  --color-page-bg-gradient: #eef1f8;
+  --color-page-bg-alt: #f0f2f7;
+  --color-surface: #ffffff;
+  --color-surface-60: rgba(255,255,255,0.6);
+  --color-surface-80: rgba(255,255,255,0.8);
+  --color-nav-bg: rgba(255,255,255,0.85);
+  --color-nav-bg-mobile: rgba(255,255,255,0.92);
+  --color-border: rgba(226,226,230,0.8);
+  --color-border-light: rgba(226,226,230,0.5);
+  --color-text-heading: #0f0f17;
+  --color-text-body: #52525b;
+  --color-text-muted: #71717a;
+  --color-text-faint: #a1a1aa;
+  --color-glass: #a9bcf049;
+  --color-skeleton: rgba(228,228,231,0.6);
+  --color-skeleton-shimmer: rgba(244,244,245,0.6);
+  --color-avatar-fallback: #f4f4f5;
+  --color-modal-overlay: rgba(0,0,0,0.4);
+  --color-modal-surface: #ffffff;
+  --color-delete-zone-bg: rgba(254,226,226,0.6);
+  --color-delete-zone-border: rgba(252,165,165,0.5);
+  --color-dot-grid: rgba(97,95,255,0.04);
+  --color-dot-grid-feed: rgba(97,95,255,0.03);
+  --color-radial-glow: rgba(97,95,255,0.04);
+  --color-gradient-fade: #f8f9fc;
+  --color-card-shadow: rgba(97,95,255,0.04);
+  --color-primary-glow: rgba(97,95,255,0.2);
+  --color-primary-glow-strong: rgba(97,95,255,0.3);
+  --color-grid-line: rgba(0,0,0,0.06);
+}
+
+.dark {
+  --color-page-bg: #06060a;
+  --color-page-bg-gradient: #01030e;
+  --color-page-bg-alt: #09090b;
+  --color-surface: #0c0c18;
+  --color-surface-60: rgba(12,12,24,0.6);
+  --color-surface-80: rgba(12,12,24,0.8);
+  --color-nav-bg: rgba(6,6,10,0.8);
+  --color-nav-bg-mobile: rgba(6,6,10,0.9);
+  --color-border: rgba(38,38,38,0.5);
+  --color-border-light: rgba(38,38,38,0.3);
+  --color-text-heading: #ffffff;
+  --color-text-body: #a3a3a3;
+  --color-text-muted: #737373;
+  --color-text-faint: #525252;
+  --color-glass: #1e3b8a49;
+  --color-skeleton: rgba(38,38,38,0.6);
+  --color-skeleton-shimmer: rgba(64,64,64,0.4);
+  --color-avatar-fallback: #171717;
+  --color-modal-overlay: rgba(0,0,0,0.7);
+  --color-modal-surface: #0c0c18;
+  --color-delete-zone-bg: rgba(69,10,10,0.3);
+  --color-delete-zone-border: rgba(127,29,29,0.4);
+  --color-dot-grid: rgba(97,95,255,0.07);
+  --color-dot-grid-feed: rgba(97,95,255,0.05);
+  --color-radial-glow: rgba(97,95,255,0.08);
+  --color-gradient-fade: #06060a;
+  --color-card-shadow: rgba(97,95,255,0.08);
+  --color-primary-glow: rgba(97,95,255,0.3);
+  --color-primary-glow-strong: rgba(97,95,255,0.4);
+  --color-grid-line: rgba(255,255,255,0.04);
+}
+
 html,
 body {
-  @apply bg-linear-to-b from-background to-[#01030e] text-foreground;
+  background: var(--color-page-bg);
+  background-image: linear-gradient(to bottom, var(--color-page-bg), var(--color-page-bg-gradient));
+  color: var(--color-text-heading);
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
@@ -17,7 +85,7 @@ body {
 #__next,
 body > div:first-child {
   min-height: 100vh;
-  background: #09090b;
+  background: var(--color-page-bg-alt);
 }
 
 /* ─── Keyframe Animations ─── */

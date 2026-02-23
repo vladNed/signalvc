@@ -11,12 +11,12 @@ import { CTASection } from "./components/CTASection";
 
 export function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-[#06060a] text-white overflow-x-hidden">
+    <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Dot-grid background */}
       <div
         className="fixed inset-0 pointer-events-none animate-grid-pulse"
         style={{
-          backgroundImage: `radial-gradient(rgba(97,95,255,0.07) 1px, transparent 1px)`,
+          backgroundImage: `radial-gradient(var(--color-dot-grid) 1px, transparent 1px)`,
           backgroundSize: "24px 24px",
         }}
       />
@@ -31,13 +31,13 @@ export function LandingPage() {
       <CTASection />
 
       {/* Footer */}
-      <footer className="border-t border-neutral-800/30 py-8 px-6">
+      <footer className="border-t border-border-light py-8 px-6">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-0.5">
-            <span className="text-sm font-black text-white">Signal</span>
+            <span className="text-sm font-black text-foreground">Signal</span>
             <span className="text-sm font-black text-primary">VC</span>
           </div>
-          <span className="text-xs text-neutral-600">
+          <span className="text-xs text-faint">
             &copy; {new Date().getFullYear()} SignalVC. All rights reserved.
           </span>
         </div>

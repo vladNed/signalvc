@@ -17,18 +17,18 @@ export function PortfolioHeader({ search, onSearchChange }: PortfolioHeaderProps
       className="space-y-4"
     >
       <div>
-        <h1 className="text-2xl font-bold text-white">Portfolio</h1>
-        <p className="text-sm text-neutral-500 mt-1">Your saved startups and conviction tracker</p>
+        <h1 className="text-2xl font-bold text-foreground">Portfolio</h1>
+        <p className="text-sm text-muted-foreground mt-1">Your saved startups and conviction tracker</p>
       </div>
 
       <div className="relative">
-        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" />
+        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
           placeholder="Search by name, market, or country..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full rounded-xl border border-neutral-800/50 backdrop-blur-xl bg-[#0c0c18]/60 py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-600 outline-none focus:border-primary/40 transition-colors"
+          className="w-full rounded-xl border border-border backdrop-blur-xl bg-surface-60 py-3 pl-11 pr-4 text-sm text-foreground placeholder-faint outline-none focus:border-primary/40 transition-colors"
         />
       </div>
     </motion.div>

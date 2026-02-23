@@ -21,9 +21,9 @@ const MAX_VISIBLE = 4;
 
 const STACK_DEPTH = [
   { scale: 1, y: 0, opacity: 1 },
-  { scale: 0.96, y: 14, opacity: 0.7 },
-  { scale: 0.92, y: 26, opacity: 0.5 },
-  { scale: 0.88, y: 36, opacity: 0.35 },
+  { scale: 0.96, y: 30, opacity: 1 },
+  { scale: 0.92, y: 60, opacity: 0.7 },
+  { scale: 0.88, y: 93, opacity: 0.6 },
 ];
 
 const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
@@ -33,10 +33,7 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
     const { isGoldenStartup } = useGolderCard();
     const { data: startups, isLoading } = onFetchFeed();
     const { isDesktop } = useMedia();
-    const { onSwipeHandler } = useSwipe(
-      setAnimatingDirection,
-      useSwipeMutation,
-    );
+    const { onSwipeHandler } = useSwipe(setAnimatingDirection, useSwipeMutation);
 
     // Unified handler for both gesture swipes and button clicks
     const handleSwipe = useCallback(
@@ -53,18 +50,18 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
       return (
         <div className="flex flex-col items-center w-full mx-auto h-full">
           <div className="relative w-full h-full">
-            <div className="absolute inset-0 bg-[#0c0c18]/60 backdrop-blur-xl border border-neutral-800/50 rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-surface-60 backdrop-blur-xl border border-border rounded-2xl overflow-hidden">
               <div className="h-full w-full p-5 md:p-8 space-y-6">
-                <div className="h-4 w-32 rounded bg-neutral-800/60 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
-                <div className="h-8 w-48 rounded bg-neutral-800/60 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                <div className="h-4 w-32 rounded bg-skeleton animate-shimmer bg-gradient-to-r from-skeleton via-skeleton-shimmer to-skeleton" />
+                <div className="h-8 w-48 rounded bg-skeleton animate-shimmer bg-gradient-to-r from-skeleton via-skeleton-shimmer to-skeleton" />
                 <div className="space-y-3">
-                  <div className="h-4 w-full rounded bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
-                  <div className="h-4 w-5/6 rounded bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
-                  <div className="h-4 w-4/6 rounded bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                  <div className="h-4 w-full rounded bg-skeleton animate-shimmer bg-gradient-to-r from-skeleton via-skeleton-shimmer to-skeleton" />
+                  <div className="h-4 w-5/6 rounded bg-skeleton animate-shimmer bg-gradient-to-r from-skeleton via-skeleton-shimmer to-skeleton" />
+                  <div className="h-4 w-4/6 rounded bg-skeleton animate-shimmer bg-gradient-to-r from-skeleton via-skeleton-shimmer to-skeleton" />
                 </div>
                 <div className="flex gap-3">
-                  <div className="h-8 w-20 rounded-full bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
-                  <div className="h-8 w-16 rounded-full bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                  <div className="h-8 w-20 rounded-full bg-skeleton animate-shimmer bg-gradient-to-r from-skeleton via-skeleton-shimmer to-skeleton" />
+                  <div className="h-8 w-16 rounded-full bg-skeleton animate-shimmer bg-gradient-to-r from-skeleton via-skeleton-shimmer to-skeleton" />
                 </div>
               </div>
             </div>
@@ -77,84 +74,81 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
     const hasCards = startups && startups.length > 0;
 
     return (
-      <div className="flex flex-col items-center w-full mx-auto h-full">
-        <div className="relative w-full h-full">
-          {!hasCards ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0c0c18]/60 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-8 text-center">
-              <div className="text-5xl mb-5">&#x1f389;</div>
-              <h2 className="text-2xl font-bold text-white mb-2">All caught up</h2>
-              <p className="text-neutral-500 mb-8 max-w-xs">
-                You&apos;ve reviewed every startup in the queue. Check back later for fresh deal flow.
-              </p>
-              <button className="cursor-pointer px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:shadow-[0_0_20px_rgba(97,95,255,0.4)] transition-all duration-300">
-                Refresh Feed
-              </button>
-            </div>
-          ) : (
-            // Render cards in reverse order so index 0 paints on top
-            [...visibleCards].reverse().map((startup) => {
-              const index = visibleCards.indexOf(startup);
-              const isTop = index === 0;
-              const isAnimatingOut = isTop && animatingDirection !== null;
-              const depth = STACK_DEPTH[index] ?? STACK_DEPTH[MAX_VISIBLE - 1];
+      <div className="flex flex-col  items-center w-full mx-auto h-full">
+        <div className="h-full w-full flex items-center justify-center">
+          <div className="relative w-full h-180 ">
+            {!hasCards ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-surface-60 backdrop-blur-xl border border-border rounded-2xl p-8 text-center">
+                <div className="text-5xl mb-5">&#x1f389;</div>
+                <h2 className="text-2xl font-bold text-foreground mb-2">
+                  All caught up
+                </h2>
+                <p className="text-muted-foreground mb-8 max-w-xs">
+                  You&apos;ve reviewed every startup in the queue. Check back later for fresh deal
+                  flow.
+                </p>
+                <button className="cursor-pointer px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:shadow-[0_0_20px_rgba(97,95,255,0.4)] transition-all duration-300">
+                  Refresh Feed
+                </button>
+              </div>
+            ) : (
+              // Render cards in reverse order so index 0 paints on top
+              [...visibleCards].reverse().map((startup) => {
+                const index = visibleCards.indexOf(startup);
+                const isTop = index === 0;
+                const isAnimatingOut = isTop && animatingDirection !== null;
+                const depth = STACK_DEPTH[index] ?? STACK_DEPTH[MAX_VISIBLE - 1];
 
-              // When top card is animating out, promote cards behind by one slot
-              const effectiveDepth =
-                !isTop && animatingDirection
-                  ? STACK_DEPTH[Math.max(0, index - 1)]
-                  : depth;
+                // When top card is animating out, promote cards behind by one slot
+                const effectiveDepth =
+                  !isTop && animatingDirection ? STACK_DEPTH[Math.max(0, index - 1)] : depth;
 
-              // Top card fly-off transform
-              const flyOffStyle: React.CSSProperties = isAnimatingOut
-                ? {
-                    transform: `translate(${
-                      animatingDirection === "bear" ? -500 : animatingDirection === "bull" ? 500 : 0
-                    }px, ${animatingDirection === "portfolio" ? -500 : 0}px) rotate(${
-                      animatingDirection === "bear" ? -25 : animatingDirection === "bull" ? 25 : 0
-                    }deg)`,
-                    opacity: 0,
-                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  }
-                : {};
-
-              // Stack positioning for non-top cards (or top card when not animating)
-              const stackStyle: React.CSSProperties = !isAnimatingOut
-                ? {
-                    transform: `scale(${effectiveDepth.scale}) translateY(${effectiveDepth.y}px)`,
-                    opacity: effectiveDepth.opacity,
-                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  }
-                : {};
-
-              return (
-                <div
-                  key={startup.id}
-                  className="absolute inset-0"
-                  style={{
-                    zIndex: MAX_VISIBLE - index,
-                    ...stackStyle,
-                    ...flyOffStyle,
-                  }}
-                >
-                  <StartupCard
-                    startup={startup}
-                    onSwipe={
-                      isTop
-                        ? (dir: SwipeType) => handleSwipe(startup.id, dir)
-                        : () => {}
+                // Top card fly-off transform
+                const flyOffStyle: React.CSSProperties = isAnimatingOut
+                  ? {
+                      transform: `translate(${
+                        animatingDirection === "bear" ? -500 : animatingDirection === "bull" ? 500 : 0
+                      }px, ${animatingDirection === "portfolio" ? -500 : 0}px) rotate(${
+                        animatingDirection === "bear" ? -25 : animatingDirection === "bull" ? 25 : 0
+                      }deg)`,
+                      opacity: 0,
+                      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                     }
-                    isTop={isTop}
-                    showBehind={index > 0 && index < MAX_VISIBLE}
-                    isGolden={isGoldenStartup(startup)}
-                    nextCardIsGolden={
-                      isTop && startups![1] ? isGoldenStartup(startups![1]) : false
+                  : {};
+
+                // Stack positioning for non-top cards (or top card when not animating)
+                const stackStyle: React.CSSProperties = !isAnimatingOut
+                  ? {
+                      transform: `scale(${effectiveDepth.scale}) translateY(${effectiveDepth.y}px)`,
+                      opacity: effectiveDepth.opacity,
+                      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                     }
-                    hoverDirection={isTop ? animatingDirection : null}
-                  />
-                </div>
-              );
-            })
-          )}
+                  : {};
+
+                return (
+                  <div
+                    key={startup.id}
+                    className="absolute inset-0"
+                    style={{
+                      zIndex: MAX_VISIBLE - index,
+                      ...stackStyle,
+                      ...flyOffStyle,
+                    }}
+                  >
+                    <StartupCard
+                      startup={startup}
+                      onSwipe={isTop ? (dir: SwipeType) => handleSwipe(startup.id, dir) : () => {}}
+                      isTop={isTop}
+                      showBehind={index > 0 && index < MAX_VISIBLE}
+                      isGolden={isGoldenStartup(startup)}
+                      nextCardIsGolden={isTop && startups![1] ? isGoldenStartup(startups![1]) : false}
+                      hoverDirection={isTop ? animatingDirection : null}
+                    />
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
 
         {isDesktop && hasCards && (

@@ -8,7 +8,7 @@ import { FeedBackground } from "./components/FeedBackground";
 
 export function FeedPage() {
   return (
-    <div className="h-[calc(100dvh-4rem)] text-white relative overflow-hidden">
+    <div className="h-[calc(100dvh-4rem)] text-foreground relative overflow-hidden">
       <FeedBackground />
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}

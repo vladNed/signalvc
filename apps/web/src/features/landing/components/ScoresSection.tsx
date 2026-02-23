@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { TrendingUp, TrendingDown, Users, BarChart3 } from "lucide-react";
+import { TrendingUp, Users, BarChart3 } from "lucide-react";
 
 const scores = [
   {
@@ -47,10 +47,10 @@ export function ScoresSection() {
           <span className="text-[10px] uppercase tracking-widest font-mono text-primary/40">
             Scoring Engine
           </span>
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mt-3">
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-3">
             Quantified conviction
           </h2>
-          <p className="text-neutral-500 mt-3 max-w-xl mx-auto">
+          <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
             Every startup gets three proprietary scores so you never invest on gut alone.
           </p>
         </motion.div>
@@ -63,19 +63,19 @@ export function ScoresSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.12 }}
-              className="bg-[#0c0c18]/60 backdrop-blur border border-neutral-800/50 rounded-2xl p-6 space-y-4"
+              className="bg-surface-60 backdrop-blur border border-border rounded-2xl p-6 space-y-4"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <s.icon size={18} className="text-primary/70" />
               </div>
-              <h3 className="text-lg font-semibold text-white">{s.title}</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">{s.description}</p>
+              <h3 className="text-lg font-semibold text-foreground">{s.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
 
               {/* Mock score display */}
-              <div className="pt-2 border-t border-neutral-800/50">
+              <div className="pt-2 border-t border-border">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-white">{s.mockValue}</span>
-                  <span className="text-sm text-neutral-500">{s.mockLabel}</span>
+                  <span className="text-3xl font-bold text-foreground">{s.mockValue}</span>
+                  <span className="text-sm text-muted-foreground">{s.mockLabel}</span>
                   {s.mockIcon && <s.mockIcon size={14} className="text-emerald-400" />}
                 </div>
               </div>

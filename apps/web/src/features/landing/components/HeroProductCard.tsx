@@ -13,12 +13,12 @@ export function HeroProductCard() {
       {/* Ambient glow */}
       <div className="absolute -inset-4 bg-primary/10 rounded-3xl blur-2xl pointer-events-none" />
 
-      <div className="relative bg-[#0c0c18]/80 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-5 space-y-4">
+      <div className="relative bg-surface-80 backdrop-blur-xl border border-border rounded-2xl p-5 space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MapPin size={14} className="text-primary/60" />
-            <span className="text-xs text-neutral-500">Berlin, DE</span>
+            <span className="text-xs text-muted-foreground">Berlin, DE</span>
           </div>
           <span className="text-[10px] uppercase tracking-widest font-mono text-primary/40">
             Live
@@ -27,8 +27,8 @@ export function HeroProductCard() {
 
         {/* Company */}
         <div>
-          <h3 className="text-lg font-bold text-white">NeuraFlow</h3>
-          <p className="text-xs text-neutral-500 mt-1 line-clamp-2">
+          <h3 className="text-lg font-bold text-foreground">NeuraFlow</h3>
+          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
             AI-powered workflow automation for enterprise teams
           </p>
         </div>
@@ -56,7 +56,7 @@ export function HeroProductCard() {
           </div>
           <div className="bg-primary/10 border border-primary/20 rounded-xl px-3 py-2">
             <span className="text-[10px] text-primary/60 block">Valuation</span>
-            <span className="text-lg font-bold text-white">$14M</span>
+            <span className="text-lg font-bold text-foreground">$14M</span>
           </div>
         </div>
 

@@ -63,7 +63,7 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
           className={`relative h-full w-full rounded-2xl overflow-hidden ${
             isGolden
               ? "bg-gradient-to-b from-startupCard-goldenFrom to-startupCard-goldenTo border-2 border-startupCard-goldenBorder shadow-golden"
-              : "bg-[#0c0c18]/60 backdrop-blur-xl border border-neutral-800/50 shadow-[0_0_40px_rgba(97,95,255,0.12)]"
+              : "bg-surface-60 backdrop-blur-xl border border-border shadow-[0_0_40px_rgba(97,95,255,0.12)]"
           }`}
         >
           {/* Swipe overlays with glow */}
@@ -124,12 +124,12 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
             {/* Top row: location + category */}
             <div className="flex items-center justify-between flex-shrink-0">
               <div className="flex items-center min-w-0">
-                <MapPin size={16} className="text-neutral-500 flex-shrink-0" />
-                <p className="text-xs md:text-sm text-neutral-500 ml-1.5 truncate">
+                <MapPin size={16} className="text-muted-foreground flex-shrink-0" />
+                <p className="text-xs md:text-sm text-muted-foreground ml-1.5 truncate">
                   {startup.countryName} - {startup.regionName ? startup.regionName : "N/A"}
                 </p>
               </div>
-              <div className="text-xs md:text-sm text-neutral-500 flex items-center gap-1.5 flex-shrink-0 ml-2">
+              <div className="text-xs md:text-sm text-muted-foreground flex items-center gap-1.5 flex-shrink-0 ml-2">
                 <span className="hidden sm:inline">{startup.businessCategory}</span>
                 <span className="sm:hidden truncate max-w-20">{startup.businessCategory}</span>
                 <ChartColumnStacked size={16} className="flex-shrink-0" />
@@ -148,7 +148,7 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
 
             {/* Description — flexible area */}
             <div className="mt-3 md:mt-4 flex-1 min-h-0 overflow-hidden">
-              <p className="text-sm md:text-lg text-neutral-300 line-clamp-4 md:line-clamp-8 leading-relaxed">
+              <p className="text-sm md:text-lg text-body line-clamp-2 md:line-clamp-4 leading-relaxed">
                 {startup.description}
               </p>
             </div>
@@ -158,7 +158,7 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
               {startup.targetMarkets.map((market) => (
                 <span
                   key={market}
-                  className="whitespace-nowrap flex-shrink-0 px-3 py-1.5 md:px-4 md:py-2 border-primary/20 border bg-primary/5 backdrop-blur rounded-full text-xs md:text-sm font-medium text-neutral-300"
+                  className="whitespace-nowrap flex-shrink-0 px-3 py-1.5 md:px-4 md:py-2 border-primary/20 border bg-primary/5 backdrop-blur rounded-full text-xs md:text-sm font-medium text-body"
                 >
                   {market}
                 </span>
@@ -167,15 +167,15 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
 
             {/* Info boxes: Valuation + Founded */}
             <div className="mt-3 md:mt-4 flex-shrink-0 grid grid-cols-2 gap-2 md:gap-4">
-              <div className="flex border-neutral-800/50 bg-white/[0.03] border rounded-xl p-3 md:p-4 flex-col gap-1">
-                <div className="text-[11px] md:text-sm text-neutral-500 flex items-center gap-1.5">
+              <div className="flex border-glass bg-glass border rounded-xl p-3 md:p-4 flex-col gap-1">
+                <div className="text-[11px] md:text-sm text-muted-foreground flex items-center gap-1.5">
                   <TrendingUp size={14} className="flex-shrink-0" />
                   <span>Valuation</span>
                 </div>
                 <div className="text-xl md:text-4xl font-bold">$12M</div>
               </div>
-              <div className="flex border-neutral-800/50 bg-white/[0.03] border rounded-xl p-3 md:p-4 flex-col gap-1">
-                <div className="text-[11px] md:text-sm text-neutral-500 flex items-center gap-1.5">
+              <div className="flex border-glass bg-glass border rounded-xl p-3 md:p-4 flex-col gap-1">
+                <div className="text-[11px] md:text-sm text-muted-foreground flex items-center gap-1.5">
                   <Landmark size={14} className="flex-shrink-0" />
                   <span>Founded</span>
                 </div>
@@ -184,8 +184,8 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
             </div>
 
             {/* Peer Score */}
-            <div className="mt-3 md:mt-4 flex-shrink-0 border border-neutral-800/50 rounded-xl bg-white/[0.03] flex items-center justify-between p-3 md:p-4 md:flex-col md:items-center md:justify-center md:gap-3 md:py-6">
-              <span className="text-sm text-neutral-500">Peer Score</span>
+            <div className="mt-3 md:mt-4 flex-shrink-0 border border-glass rounded-xl bg-glass flex items-center justify-between p-3 md:p-4 md:flex-col md:items-center md:justify-center md:gap-3 md:py-6">
+              <span className="text-sm text-muted-foreground">Peer Score</span>
               <div className={`flex items-center text-2xl md:text-5xl font-bold ${getScoreColor(startup.peerScore)}`}>
                 {startup.peerScore.toFixed(2)}
                 {startup.peerScore >= 30 ? (

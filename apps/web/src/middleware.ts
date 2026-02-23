@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 const PUBLIC_ROUTES = ["/auth", "/auth/callback", "/auth/verify", "/auth/confirm"];
 
 // Routes that require full authentication (no anonymous users)
-const AUTHENTICATED_ONLY_ROUTES = ["/feed", "/portfolio"];
+const AUTHENTICATED_ONLY_ROUTES = ["/feed", "/portfolio", "/profile"];
 
 // Routes only for anonymous users
 const ANONYMOUS_ONLY_ROUTES = ["/discover"];

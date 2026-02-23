@@ -3,15 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { ThemeToggle } from "@/shared/components/ThemeToggle";
 
 export function LandingNav() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#06060a]/70 border-b border-neutral-800/30">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-nav border-b border-border-light">
       <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-0.5">
-          <span className="text-2xl font-black text-white">Signal</span>
+          <span className="text-2xl font-black text-foreground">Signal</span>
           <span className="text-2xl font-black text-primary">VC</span>
         </Link>
 
@@ -19,7 +20,7 @@ export function LandingNav() {
         <div className="hidden md:flex items-center gap-3">
           <Link
             href="/discover"
-            className="px-4 py-2 text-sm text-neutral-400 hover:text-white transition-colors"
+            className="px-4 py-2 text-sm text-body hover:text-foreground transition-colors"
           >
             Try It
           </Link>
@@ -29,12 +30,13 @@ export function LandingNav() {
           >
             Get Access
           </Link>
+          <ThemeToggle />
         </div>
 
         {/* Mobile hamburger */}
         <button
           onClick={() => setIsOpen((prev) => !prev)}
-          className="md:hidden p-2 text-neutral-400 hover:text-white transition-colors"
+          className="md:hidden p-2 text-body hover:text-foreground transition-colors"
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
@@ -43,21 +45,22 @@ export function LandingNav() {
 
       {/* Mobile dropdown */}
       {isOpen && (
-        <div className="md:hidden border-t border-neutral-800/30 bg-[#06060a]/95 backdrop-blur-xl px-6 py-4 flex flex-col gap-3">
+        <div className="md:hidden border-t border-border-light bg-nav-mobile backdrop-blur-xl px-6 py-4 flex flex-col gap-3">
           <Link
             href="/discover"
             onClick={() => setIsOpen(false)}
-            className="py-3 text-sm text-neutral-400 hover:text-white transition-colors border-b border-neutral-800/30"
+            className="py-3 text-sm text-body hover:text-foreground transition-colors border-b border-border-light"
           >
             Try It
           </Link>
           <Link
             href="/auth"
             onClick={() => setIsOpen(false)}
-            className="py-3 text-sm font-medium text-white"
+            className="py-3 text-sm font-medium text-foreground"
           >
             Get Access →
           </Link>
+          <ThemeToggle />
         </div>
       )}
     </nav>
