@@ -7,19 +7,19 @@ const useSwipe = (
 ) => {
   const [swipe] = useSwipeMutation();
 
-  const handleSwipeAnimation = (direction: SwipeType) => {
-    setAnimationDirection(direction);
-    setTimeout(() => {
-      setAnimationDirection(null);
-    }, 300);
-  };
-
   const onSwipeHandler = async (startupId: string, swipeType: SwipeType) => {
-    handleSwipeAnimation(swipeType);
+    // Show overlay + fly-off animation first
+    setAnimationDirection(swipeType);
+
+    // Wait for animation to complete before firing the mutation
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    setAnimationDirection(null);
+
+    // Now remove card from list via optimistic update
     await swipe({ startupId, swipeType });
   };
 
-  return { handleSwipeAnimation, onSwipeHandler };
+  return { onSwipeHandler };
 };
 
 export default useSwipe;

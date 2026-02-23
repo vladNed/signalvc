@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Startup, SwipeType } from "@signalvc/types";
 import useSwipeGesture from "./hooks/useSwipeGesture";
-import { ChartColumnStacked, Landmark, MapPin, PinIcon, TrendingDown, TrendingUp } from "lucide-react";
+import { ChartColumnStacked, Landmark, MapPin, TrendingDown, TrendingUp } from "lucide-react";
 
 type StartupCardProps = {
   startup: Startup;
@@ -13,18 +13,9 @@ type StartupCardProps = {
   hoverDirection?: SwipeType | null;
 };
 
-// TODO: Move this to utils
 const getScoreColor = (score: number) => {
   if (score >= 30) return "text-emerald-400";
   if (score >= 50) return "text-yellow-400";
-  return "text-red-400";
-};
-
-// TODO: Move this to utils
-const getSentimentColor = (sentiment: string) => {
-  if (sentiment.includes("Very Bullish") || sentiment.includes("Bullish"))
-    return "text-emerald-400";
-  if (sentiment.includes("Neutral")) return "text-yellow-400";
   return "text-red-400";
 };
 
@@ -50,112 +41,161 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
       ? `translate(${offset.x}px, ${offset.y}px) rotate(${rotation}deg)`
       : "translate(0, 0) rotate(0deg)";
 
-    const opacity = isDragging ? 1 : 1;
+    // Calculate overlay opacity based on drag distance
+    const swipeOpacity = Math.min(Math.abs(offset.x) / 100, 1) * 0.8;
+    const saveOpacity = Math.min(Math.abs(offset.y) / 100, 1) * 0.8;
 
     return (
       <div
         ref={ref}
-        className={`absolute inset-0 cursor-grab active:cursor-grabbing select-none ${!isDragging ? "transition-[transform,opacity] duration-300 ease-out" : ""} ${isTop ? "z-10" : "z-1"} ${!isTop && !showBehind ? "opacity-0 pointer-events-none" : ""} ${nextCardIsGolden && isTop ? "overflow-visible" : ""}`}
+        className={`absolute inset-0 select-none ${isTop ? "cursor-grab active:cursor-grabbing" : "pointer-events-none"} ${!isDragging ? "transition-[transform] duration-300 ease-out" : ""} ${nextCardIsGolden && isTop ? "overflow-visible" : ""}`}
         style={{
-          transform,
-          opacity: isTop || showBehind ? Math.max(opacity, 0.3) : 0,
+          transform: isTop ? transform : undefined,
+          touchAction: isTop ? "none" : undefined,
         }}
-        {...handlers}
+        {...(isTop ? handlers : {})}
       >
         {nextCardIsGolden && isTop && (
           <div className="absolute -inset-2 rounded-xl bg-gradient-to-b from-yellow-500/20 to-amber-600/20 blur-xl animate-pulse pointer-events-none -z-10" />
         )}
 
         <div
-          className={`relative max-h-200 h-full w-full rounded-2xl overflow-hidden ${
+          className={`relative h-full w-full rounded-2xl overflow-hidden ${
             isGolden
               ? "bg-gradient-to-b from-startupCard-goldenFrom to-startupCard-goldenTo border-2 border-startupCard-goldenBorder shadow-golden"
-              : "backdrop-blur-xl border border-neutral-800 bg-background/30 shadow-dark"
+              : "bg-[#0c0c18]/60 backdrop-blur-xl border border-neutral-800/50 shadow-[0_0_40px_rgba(97,95,255,0.12)]"
           }`}
         >
+          {/* Swipe overlays with glow */}
           {(isDragging || hoverDirection) && (
             <>
               {(hoverDirection === "bear" || (isDragging && offset.x < -50)) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bear/30 pointer-events-none z-50">
-                  <span className="text-6xl font-bold text-sentiment-bear rotate-12">BEAR</span>
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none z-50"
+                  style={{
+                    background: `radial-gradient(circle at center, rgba(239,68,68,${hoverDirection === "bear" ? 0.25 : swipeOpacity * 0.3}) 0%, transparent 70%)`,
+                  }}
+                >
+                  <span
+                    className="text-5xl md:text-6xl font-bold text-red-400 rotate-12"
+                    style={{ opacity: hoverDirection === "bear" ? 1 : swipeOpacity }}
+                  >
+                    BEAR
+                  </span>
                 </div>
               )}
               {(hoverDirection === "bull" || (isDragging && offset.x > 50)) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-sentiment-bull/30 pointer-events-none z-50">
-                  <span className="text-6xl font-bold text-sentiment-bull -rotate-12">BULL</span>
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none z-50"
+                  style={{
+                    background: `radial-gradient(circle at center, rgba(16,185,129,${hoverDirection === "bull" ? 0.25 : swipeOpacity * 0.3}) 0%, transparent 70%)`,
+                  }}
+                >
+                  <span
+                    className="text-5xl md:text-6xl font-bold text-emerald-400 -rotate-12"
+                    style={{ opacity: hoverDirection === "bull" ? 1 : swipeOpacity }}
+                  >
+                    BULL
+                  </span>
                 </div>
               )}
               {(hoverDirection === "portfolio" ||
                 (isDragging && offset.y < -50 && Math.abs(offset.y) > Math.abs(offset.x))) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-sentiment-portfolio/30 pointer-events-none z-50">
-                  <span className="text-6xl font-bold text-sentiment-portfolio">SAVE</span>
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none z-50"
+                  style={{
+                    background: `radial-gradient(circle at center, rgba(97,95,255,${hoverDirection === "portfolio" ? 0.25 : saveOpacity * 0.3}) 0%, transparent 70%)`,
+                  }}
+                >
+                  <span
+                    className="text-5xl md:text-6xl font-bold text-blue-400"
+                    style={{ opacity: hoverDirection === "portfolio" ? 1 : saveOpacity }}
+                  >
+                    SAVE
+                  </span>
                 </div>
               )}
             </>
           )}
 
-          {/* BODY */}
-          <div className="relative h-full w-full grid grid-rows-12 p-8 gap-4">
-            <div className="row-span-1 flex items-center justify-between">
-              <div className="flex items-center">
-                <MapPin size={18} className="text-accent-foreground" />
-                <p className="text-sm text-accent-foreground ml-2">
+          {/* ── CARD BODY ── */}
+          <div className="relative h-full w-full flex flex-col p-5 md:p-8 overflow-hidden">
+
+            {/* Top row: location + category */}
+            <div className="flex items-center justify-between flex-shrink-0">
+              <div className="flex items-center min-w-0">
+                <MapPin size={16} className="text-neutral-500 flex-shrink-0" />
+                <p className="text-xs md:text-sm text-neutral-500 ml-1.5 truncate">
                   {startup.countryName} - {startup.regionName ? startup.regionName : "N/A"}
                 </p>
               </div>
-              <div className="text-sm text-accent-foreground flex items-center gap-2">
-                {startup.businessCategory}
-                <ChartColumnStacked size={18} className="inline-block ml-1" />
+              <div className="text-xs md:text-sm text-neutral-500 flex items-center gap-1.5 flex-shrink-0 ml-2">
+                <span className="hidden sm:inline">{startup.businessCategory}</span>
+                <span className="sm:hidden truncate max-w-20">{startup.businessCategory}</span>
+                <ChartColumnStacked size={16} className="flex-shrink-0" />
               </div>
             </div>
-            <div className="row-span-1 flex items-center gap-4">
-              <div className="bg-accent/30 border border-accent p-4 items-center justify-center rounded-full">
-                <Landmark size={25} />
+
+            {/* Name row */}
+            <div className="flex items-center gap-3 mt-3 md:mt-4 flex-shrink-0">
+              <div className="bg-primary/10 border border-primary/20 p-2.5 md:p-4 items-center justify-center rounded-full flex-shrink-0">
+                <Landmark size={20} className="md:w-6 md:h-6" />
               </div>
-              <h2 className="text-3xl font-semibold tracking-tight flex">
+              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight truncate">
                 {startup.operationalName}
               </h2>
             </div>
-            <div className="row-span-4">
-              <p className="text-lg text-start line-clamp-8">{startup.description}</p>
+
+            {/* Description — flexible area */}
+            <div className="mt-3 md:mt-4 flex-1 min-h-0 overflow-hidden">
+              <p className="text-sm md:text-lg text-neutral-300 line-clamp-4 md:line-clamp-8 leading-relaxed">
+                {startup.description}
+              </p>
             </div>
-            <div className="row-span-1 flex items-center gap-2 overflow-x-scroll overflow-y-hidden scrollbar-thin scrollbar-thumb-accent scrollbar-track-background">
+
+            {/* Tags — horizontal scroll, never wrap */}
+            <div className="mt-3 flex-shrink-0 flex items-center gap-1.5 md:gap-2 overflow-x-auto overflow-y-hidden scrollbar-none -mx-1 px-1">
               {startup.targetMarkets.map((market) => (
                 <span
                   key={market}
-                  className="whitespace-nowrap px-4 py-2 border-accent border bg-accent/30 rounded-full text-md font-medium"
+                  className="whitespace-nowrap flex-shrink-0 px-3 py-1.5 md:px-4 md:py-2 border-primary/20 border bg-primary/5 backdrop-blur rounded-full text-xs md:text-sm font-medium text-neutral-300"
                 >
                   {market}
                 </span>
               ))}
             </div>
-            <div className="row-span-2 grid grid-cols-2 gap-4">
-              <div className="col-span-1 flex border-accent bg-accent/30 border rounded-xl p-4 flex-col justify-between">
-                <div className="text-sm text-accent-foreground flex items-center gap-2">
-                  <TrendingUp size={18} className="inline-block ml-1" />
-                  <span className="">Current Valuation</span>
+
+            {/* Info boxes: Valuation + Founded */}
+            <div className="mt-3 md:mt-4 flex-shrink-0 grid grid-cols-2 gap-2 md:gap-4">
+              <div className="flex border-neutral-800/50 bg-white/[0.03] border rounded-xl p-3 md:p-4 flex-col gap-1">
+                <div className="text-[11px] md:text-sm text-neutral-500 flex items-center gap-1.5">
+                  <TrendingUp size={14} className="flex-shrink-0" />
+                  <span>Valuation</span>
                 </div>
-                <div className="text-4xl font-bold ">$12M</div>
+                <div className="text-xl md:text-4xl font-bold">$12M</div>
               </div>
-              <div className="col-span-1 flex border-accent bg-accent/30 border rounded-xl p-4 flex-col justify-between">
-                <div className="text-sm text-accent-foreground flex items-center gap-2">
-                  <Landmark size={18} className="inline-block ml-1" />
-                  <span className="">Founded In</span>
+              <div className="flex border-neutral-800/50 bg-white/[0.03] border rounded-xl p-3 md:p-4 flex-col gap-1">
+                <div className="text-[11px] md:text-sm text-neutral-500 flex items-center gap-1.5">
+                  <Landmark size={14} className="flex-shrink-0" />
+                  <span>Founded</span>
                 </div>
-                <div className="text-4xl font-bold ">{startup.foundedYear}</div>
+                <div className="text-xl md:text-4xl font-bold">{startup.foundedYear}</div>
               </div>
             </div>
-            <div className="row-span-3 border border-accent rounded-xl bg-accent/30 flex flex-col items-center justify-center p-4 gap-4 overflow-hidden">
-              <span className="text-md text-accent-foreground">Peer Score</span>
-              <div className={`flex items-center text-5xl font-bold ${getScoreColor(startup.peerScore)}`}>
+
+            {/* Peer Score */}
+            <div className="mt-3 md:mt-4 flex-shrink-0 border border-neutral-800/50 rounded-xl bg-white/[0.03] flex items-center justify-between p-3 md:p-4 md:flex-col md:items-center md:justify-center md:gap-3 md:py-6">
+              <span className="text-sm text-neutral-500">Peer Score</span>
+              <div className={`flex items-center text-2xl md:text-5xl font-bold ${getScoreColor(startup.peerScore)}`}>
                 {startup.peerScore.toFixed(2)}
                 {startup.peerScore >= 30 ? (
-                  <span className="text-sm text-emerald-400 ml-2"><TrendingUp size={30} /></span>
+                  <TrendingUp size={18} className="text-emerald-400 ml-1.5 md:ml-2 md:w-7 md:h-7" />
                 ) : (
-                  <span className="text-sm text-red-400 ml-2"><TrendingDown size={30} /></span>
+                  <TrendingDown size={18} className="text-red-400 ml-1.5 md:ml-2 md:w-7 md:h-7" />
                 )}
               </div>
             </div>
+
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import type { TypedUseMutation, TypedUseQuery } from "@reduxjs/toolkit/query/react";
 import type { Startup, SwipeType } from "@signalvc/types";
 import { MoveLeft, MoveRight, MoveUp } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { Button } from "../Button/index.web";
 import { StartupCard } from "../StartupCard/index.web";
 import useGolderCard from "./hooks/useGolderCard";
@@ -17,71 +17,139 @@ type SwipeStackProps = {
   };
 };
 
+const MAX_VISIBLE = 4;
+
+const STACK_DEPTH = [
+  { scale: 1, y: 0, opacity: 1 },
+  { scale: 0.96, y: 14, opacity: 0.7 },
+  { scale: 0.92, y: 26, opacity: 0.5 },
+  { scale: 0.88, y: 36, opacity: 0.35 },
+];
+
 const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
   ({ onFetchFeed, useSwipeMutation, useMedia }, ref) => {
     const [animatingDirection, setAnimatingDirection] = useState<SwipeType | null>(null);
+    const swipingRef = useRef(false);
     const { isGoldenStartup } = useGolderCard();
     const { data: startups, isLoading } = onFetchFeed();
     const { isDesktop } = useMedia();
-    const { handleSwipeAnimation, onSwipeHandler } = useSwipe(
+    const { onSwipeHandler } = useSwipe(
       setAnimatingDirection,
       useSwipeMutation,
     );
 
+    // Unified handler for both gesture swipes and button clicks
+    const handleSwipe = useCallback(
+      async (startupId: string, direction: SwipeType) => {
+        if (swipingRef.current) return;
+        swipingRef.current = true;
+        await onSwipeHandler(startupId, direction);
+        swipingRef.current = false;
+      },
+      [onSwipeHandler],
+    );
+
     if (isLoading) {
       return (
-        <div className="flex items-center justify-center w-full h-full">
-          <p className="text-white text-lg">Loading...</p>
+        <div className="flex flex-col items-center w-full mx-auto h-full">
+          <div className="relative w-full h-full">
+            <div className="absolute inset-0 bg-[#0c0c18]/60 backdrop-blur-xl border border-neutral-800/50 rounded-2xl overflow-hidden">
+              <div className="h-full w-full p-5 md:p-8 space-y-6">
+                <div className="h-4 w-32 rounded bg-neutral-800/60 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                <div className="h-8 w-48 rounded bg-neutral-800/60 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                <div className="space-y-3">
+                  <div className="h-4 w-full rounded bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                  <div className="h-4 w-5/6 rounded bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                  <div className="h-4 w-4/6 rounded bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                </div>
+                <div className="flex gap-3">
+                  <div className="h-8 w-20 rounded-full bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                  <div className="h-8 w-16 rounded-full bg-neutral-800/40 animate-shimmer bg-gradient-to-r from-neutral-800/40 via-neutral-700/40 to-neutral-800/40" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       );
     }
 
+    const visibleCards = startups?.slice(0, MAX_VISIBLE) ?? [];
+    const hasCards = startups && startups.length > 0;
+
     return (
-      <div className="flex flex-col items-center w-full max-w-lg mx-auto h-full py-4">
+      <div className="flex flex-col items-center w-full mx-auto h-full">
         <div className="relative w-full h-full">
-          {!startups || startups.length === 0 ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0e] rounded-2xl p-8 text-center shadow-lg shadow-black/40">
-              <div className="text-6xl mb-4">🎉</div>
-              <h2 className="text-2xl font-bold text-white mb-2">All Done!</h2>
-              <p className="text-neutral-400 mb-6">You&apos;ve reviewed all startups</p>
-              <button className="cursor-pointer px-6 py-3 bg-emerald-500 text-white rounded-lg font-semibold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20">
-                Start Over
+          {!hasCards ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0c0c18]/60 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-8 text-center">
+              <div className="text-5xl mb-5">&#x1f389;</div>
+              <h2 className="text-2xl font-bold text-white mb-2">All caught up</h2>
+              <p className="text-neutral-500 mb-8 max-w-xs">
+                You&apos;ve reviewed every startup in the queue. Check back later for fresh deal flow.
+              </p>
+              <button className="cursor-pointer px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:shadow-[0_0_20px_rgba(97,95,255,0.4)] transition-all duration-300">
+                Refresh Feed
               </button>
             </div>
           ) : (
-            startups!.map((startup, index) => {
-              const getAnimationStyle = () => {
-                if (index !== 0 || !animatingDirection) return {};
+            // Render cards in reverse order so index 0 paints on top
+            [...visibleCards].reverse().map((startup) => {
+              const index = visibleCards.indexOf(startup);
+              const isTop = index === 0;
+              const isAnimatingOut = isTop && animatingDirection !== null;
+              const depth = STACK_DEPTH[index] ?? STACK_DEPTH[MAX_VISIBLE - 1];
 
-                const translateX =
-                  animatingDirection === "bear" ? -400 : animatingDirection === "bull" ? 400 : 0;
-                const translateY = animatingDirection === "portfolio" ? -400 : 0;
-                const rotate =
-                  animatingDirection === "bear" ? -20 : animatingDirection === "bull" ? 20 : 0;
+              // When top card is animating out, promote cards behind by one slot
+              const effectiveDepth =
+                !isTop && animatingDirection
+                  ? STACK_DEPTH[Math.max(0, index - 1)]
+                  : depth;
 
-                return {
-                  transform: `translate(${translateX}px, ${translateY}px) rotate(${rotate}deg)`,
-                  opacity: 0,
-                  transition: "all 0.3s ease-out",
-                };
-              };
+              // Top card fly-off transform
+              const flyOffStyle: React.CSSProperties = isAnimatingOut
+                ? {
+                    transform: `translate(${
+                      animatingDirection === "bear" ? -500 : animatingDirection === "bull" ? 500 : 0
+                    }px, ${animatingDirection === "portfolio" ? -500 : 0}px) rotate(${
+                      animatingDirection === "bear" ? -25 : animatingDirection === "bull" ? 25 : 0
+                    }deg)`,
+                    opacity: 0,
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }
+                : {};
+
+              // Stack positioning for non-top cards (or top card when not animating)
+              const stackStyle: React.CSSProperties = !isAnimatingOut
+                ? {
+                    transform: `scale(${effectiveDepth.scale}) translateY(${effectiveDepth.y}px)`,
+                    opacity: effectiveDepth.opacity,
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }
+                : {};
 
               return (
                 <div
                   key={startup.id}
-                  style={getAnimationStyle()}
-                  className={index === 0 ? "absolute inset-0" : ""}
+                  className="absolute inset-0"
+                  style={{
+                    zIndex: MAX_VISIBLE - index,
+                    ...stackStyle,
+                    ...flyOffStyle,
+                  }}
                 >
                   <StartupCard
                     startup={startup}
-                    onSwipe={index === 0 ? handleSwipeAnimation : () => {}}
-                    isTop={index === 0}
-                    showBehind={index === 1}
+                    onSwipe={
+                      isTop
+                        ? (dir: SwipeType) => handleSwipe(startup.id, dir)
+                        : () => {}
+                    }
+                    isTop={isTop}
+                    showBehind={index > 0 && index < MAX_VISIBLE}
                     isGolden={isGoldenStartup(startup)}
                     nextCardIsGolden={
-                      index === 0 && startups[1] ? isGoldenStartup(startups[1]) : false
+                      isTop && startups![1] ? isGoldenStartup(startups![1]) : false
                     }
-                    hoverDirection={index === 0 ? animatingDirection : null}
+                    hoverDirection={isTop ? animatingDirection : null}
                   />
                 </div>
               );
@@ -89,30 +157,30 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
           )}
         </div>
 
-        {isDesktop && (
+        {isDesktop && hasCards && (
           <div className="grid items-center justify-center gap-4 mt-6 grid-cols-12 w-full h-20">
             <Button
-              className="cursor-pointer hover:bg-sentiment-bear/40 flex-col text-sentiment-bear col-span-3 bg-sentiment-bear/30 border border-sentiment-bear rounded-lg items-center flex justify-center h-full"
-              onClick={() => onSwipeHandler(startups![0].id, "bear")}
+              className="group cursor-pointer flex-col text-sentiment-bear col-span-3 bg-red-500/10 border border-red-500/30 rounded-xl items-center flex justify-center h-full hover:bg-red-500/20 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] hover:scale-[1.02] transition-all duration-200"
+              onClick={() => handleSwipe(startups![0].id, "bear")}
               variant="feed"
             >
-              <p>BEAR</p>
+              <p className="font-bold">BEAR</p>
               <MoveLeft size={16} />
             </Button>
             <Button
-              className="cursor-pointer hover:bg-sentiment-portfolio/40 flex-col text-sentiment-portfolio col-span-6 bg-sentiment-portfolio/30 border border-sentiment-portfolio rounded-lg items-center flex justify-center h-full"
-              onClick={() => onSwipeHandler(startups![0].id, "portfolio")}
+              className="group cursor-pointer flex-col text-sentiment-portfolio col-span-6 bg-primary/10 border border-primary/30 rounded-xl items-center flex justify-center h-full hover:bg-primary/20 hover:shadow-[0_0_20px_rgba(97,95,255,0.2)] hover:scale-[1.02] transition-all duration-200"
+              onClick={() => handleSwipe(startups![0].id, "portfolio")}
               variant="feed"
             >
               <MoveUp size={16} />
-              <p>SAVE</p>
+              <p className="font-bold">SAVE</p>
             </Button>
             <Button
-              className="cursor-pointer hover:bg-sentiment-bull/40 flex-col text-sentiment-bull col-span-3 bg-sentiment-bull/30 border border-sentiment-bull rounded-lg items-center flex justify-center h-full"
-              onClick={() => onSwipeHandler(startups![0].id, "bull")}
+              className="group cursor-pointer flex-col text-sentiment-bull col-span-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl items-center flex justify-center h-full hover:bg-emerald-500/20 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:scale-[1.02] transition-all duration-200"
+              onClick={() => handleSwipe(startups![0].id, "bull")}
               variant="feed"
             >
-              <p>BULL</p>
+              <p className="font-bold">BULL</p>
               <MoveRight size={16} />
             </Button>
           </div>

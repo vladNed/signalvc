@@ -3,21 +3,27 @@
 import { useFetchFeedQuery, useSwipeMutation } from "@/shared/api";
 import { useMedia } from "@/shared/hooks";
 import { SwipeStack } from "@signalvc/ui";
+import { motion } from "motion/react";
+import { FeedBackground } from "./components/FeedBackground";
 
 export function FeedPage() {
   return (
-    <div className="h-screen text-white">
-      <div className="py-10 h-full">
-        <div className="max-w-200 mx-auto h-full grid grid-rows-12">
-          <div className="row-span-11">
-            <SwipeStack
-              onFetchFeed={useFetchFeedQuery}
-              useSwipeMutation={useSwipeMutation}
-              useMedia={useMedia}
-            />
-          </div>
+    <div className="h-[calc(100dvh-4rem)] text-white relative overflow-hidden">
+      <FeedBackground />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="h-full px-3 py-3 md:px-0 md:py-10"
+      >
+        <div className="max-w-lg mx-auto h-full">
+          <SwipeStack
+            onFetchFeed={useFetchFeedQuery}
+            useSwipeMutation={useSwipeMutation}
+            useMedia={useMedia}
+          />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -9,14 +9,15 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "@signalvc/data-access": "workspace:*",
+    "@signalvc/services": "workspace:*",
     "@signalvc/types": "workspace:*",
     "@signalvc/ui": "workspace:*",
-    "@signalvc/services": "workspace:*",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
-    "@reduxjs/toolkit": "^2.11.2",
     "lucide-react": "^0.563.0",
+    "motion": "^12.0.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",

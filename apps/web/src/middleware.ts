@@ -13,6 +13,9 @@ const ANONYMOUS_ONLY_ROUTES = ["/discover"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Allow landing page through without auth
+  if (pathname === "/") return NextResponse.next();
+
   // Skip auth check for public routes (auth pages)
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     return NextResponse.next();

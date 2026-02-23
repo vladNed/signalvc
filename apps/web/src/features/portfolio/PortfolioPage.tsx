@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
+import { motion } from "motion/react";
 import { MOCK_PORTFOLIO } from "./consts/mockData";
 import { PortfolioCard } from "./components/PortfolioCard";
+import { PortfolioStats } from "./components/PortfolioStats";
+import { PortfolioHeader } from "./components/PortfolioHeader";
 
 export function PortfolioPage() {
   const [search, setSearch] = useState("");
@@ -22,29 +24,26 @@ export function PortfolioPage() {
   return (
     <div className="h-full text-white">
       <div className="py-8 max-w-3xl mx-auto px-4 space-y-6">
-        {/* Search */}
-        <div className="relative">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-accent-foreground" />
-          <input
-            type="text"
-            placeholder="Search saved startups..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-neutral-800 backdrop-blur-xl bg-background/30 py-3 pl-11 pr-4 text-sm text-white placeholder-accent-foreground outline-none focus:border-accent transition-colors"
-          />
-        </div>
+        <PortfolioHeader search={search} onSearchChange={setSearch} />
+        <PortfolioStats startups={MOCK_PORTFOLIO} />
 
         {/* Card list */}
         <div className="space-y-4">
           {filtered.map((startup, index) => (
-            <PortfolioCard
+            <motion.div
               key={startup.id}
-              startup={startup}
-              defaultExpanded={index === 0}
-            />
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 + index * 0.08 }}
+            >
+              <PortfolioCard
+                startup={startup}
+                defaultExpanded={index === 0}
+              />
+            </motion.div>
           ))}
           {filtered.length === 0 && (
-            <p className="text-center text-gray-500 py-12">No startups match your search.</p>
+            <p className="text-center text-neutral-600 py-12">No startups match your search.</p>
           )}
         </div>
       </div>
