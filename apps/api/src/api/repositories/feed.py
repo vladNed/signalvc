@@ -18,36 +18,36 @@ class FeedRepository:
     async def fetch_feed(self, user_id: str) -> list[schemas.feed.Startup]:
         """Fetch the feed for a given user."""
         query = """
-            WITH filtered AS (
-                SELECT
-                    s.id,
-                    s.operational_name,
-                    s.description,
-                    s.target_markets,
-                    s.business_category,
-                    s.employee_count,
-                    s.founded_year,
-                    s.country_name,
-                    s.region_name,
-                    COALESCE(AVG(isc.score), 0) AS peer_score
-                FROM startup s
-                LEFT JOIN swipe sw
-                    ON sw.startup_id = s.id
-                    AND sw.user_id = $1
-                LEFT JOIN startup_investor si
-                    ON si.startup_id = s.id
-                LEFT JOIN investor_score isc
-                    ON isc.investor_id = si.investor_id
-                WHERE s.founded_year IS NOT NULL
-                AND sw.startup_id IS NULL
-                GROUP BY s.id
-                LIMIT 1000
-            )
-            SELECT *
-            FROM filtered
-            ORDER BY 
-                (0.4 * peer_score + 0.6 * random() * 100) DESC
-            LIMIT 20;
+        WITH filtered AS (
+            SELECT
+                s.id,
+                s.operational_name,
+                s.description,
+                s.target_markets,
+                s.business_category,
+                s.employee_count,
+                s.founded_year,
+                s.country_name,
+                s.region_name,
+                COALESCE(AVG(isc.score), 0) AS peer_score,
+                MAX(si.current_valuation_usd) as current_valuation
+            FROM startup s
+            LEFT JOIN swipe sw
+                ON sw.startup_id = s.id
+                AND sw.user_id = $1
+            LEFT JOIN startup_investor si
+                ON si.startup_id = s.id
+            LEFT JOIN investor_score isc
+                ON isc.investor_id = si.investor_id
+            GROUP BY s.id
+            LIMIT 1000
+        )
+        SELECT *
+        FROM filtered
+        WHERE founded_year IS NOT NULL
+        ORDER BY 
+            (0.4 * peer_score + 0.6 * random() * 100) DESC
+        LIMIT 20;
         """
 
         records = await self.db_conn.fetch(query, user_id)
