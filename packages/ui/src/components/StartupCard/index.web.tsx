@@ -45,6 +45,14 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
     const swipeOpacity = Math.min(Math.abs(offset.x) / 100, 1) * 0.8;
     const saveOpacity = Math.min(Math.abs(offset.y) / 100, 1) * 0.8;
 
+    function formatValuation(valuation: any): React.ReactNode {
+      if (valuation == null) return "—";
+      if (valuation >= 1_000_000_000) return `$${(valuation / 1_000_000_000).toFixed(1)}B`;
+      if (valuation >= 1_000_000) return `$${(valuation / 1_000_000).toFixed(1)}M`;
+      if (valuation >= 1_000) return `$${(valuation / 1_000).toFixed(0)}K`;
+      return `$${valuation}`;
+    }
+
     return (
       <div
         ref={ref}
@@ -119,10 +127,10 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
           )}
 
           {/* ── CARD BODY ── */}
-          <div className="relative h-full w-full p-5 md:p-8 overflow-hidden grid grid-rows-12">
+          <div className="relative h-full w-full p-5 md:p-8 overflow-hidden grid grid-rows-24">
 
             {/* Top row: location + category */}
-            <div className="flex items-center justify-between flex-shrink-0 row-span-1">
+            <div className="flex items-center justify-between flex-shrink-0 row-span-1 ">
               <div className="flex items-center min-w-0">
                 <MapPin size={16} className="text-muted-foreground flex-shrink-0" />
                 <p className="text-xs md:text-sm text-muted-foreground ml-1.5 truncate">
@@ -137,7 +145,7 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
             </div>
 
             {/* Name row */}
-            <div className="flex items-center gap-3 mt-3 md:mt-4 flex-shrink-0 row-span-1">
+            <div className="flex items-center gap-3 mt-3 md:mt-4 flex-shrink-0 row-span-3">
               <div className="bg-primary/10 border border-primary/20 p-2.5 md:p-4 items-center justify-center rounded-full flex-shrink-0">
                 <Landmark size={20} className="md:w-6 md:h-6" />
               </div>
@@ -147,14 +155,14 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
             </div>
 
             {/* Description — flexible area */}
-            <div className="mt-3 md:mt-4 flex-1 min-h-0 overflow-hidden row-span-2">
-              <p className="text-md md:text-lg text-body line-clamp-3 leading-relaxed">
+            <div className="mt-3 md:mt-4 flex-1 min-h-0 overflow-hidden row-span-6">
+              <p className="text-md md:text-lg text-body line-clamp-4 leading-relaxed">
                 {startup.description}
               </p>
             </div>
 
             {/* Tags — horizontal scroll, never wrap */}
-            <div className="row-span-1 mt-3 flex-shrink-0 flex items-center gap-1.5 md:gap-2 overflow-x-auto overflow-y-hidden scrollbar-none -mx-1 px-1">
+            <div className="row-span-2 mt-3 flex-shrink-0 flex items-center gap-1.5 md:gap-2 overflow-x-auto overflow-y-hidden scrollbar-none -mx-1 px-1">
               {startup.targetMarkets.map((market) => (
                 <span
                   key={market}
@@ -166,27 +174,27 @@ const StartupCard = React.forwardRef<HTMLDivElement, StartupCardProps>(
             </div>
 
             {/* Info boxes: Valuation + Founded */}
-            <div className="row-span-3 mt-3 md:mt-4 flex-shrink-0 grid grid-cols-2 gap-2 md:gap-4">
+            <div className="row-span-6 mt-3 md:mt-4 flex-shrink-0 grid grid-cols-2 gap-2 md:gap-4">
               <div className="flex border-glass bg-glass border rounded-xl p-3 md:p-4 flex-col gap-1 justify-between">
-                <div className="text-md text-accent-foreground flex items-center gap-1.5">
+                <div className="text-sm md:text-md text-accent-foreground flex items-center gap-1.5">
                   <TrendingUp size={14} className="flex-shrink-0" />
                   <span>Valuation</span>
                 </div>
-                  <div className="text-5xl font-bold text-accent-foreground">$12M</div>
+                  <div className="text-3xl md:text-4xl font-bold text-accent-foreground">{formatValuation(startup.valuation)}</div>
                 </div>
               <div className="flex border-glass bg-glass border rounded-xl p-3 md:p-4 flex-col gap-1 justify-between">
-                <div className="text-md text-accent-foreground flex items-center gap-1.5">
+                <div className="text-sm md:text-md text-accent-foreground flex items-center gap-1.5">
                   <Landmark size={14} className="flex-shrink-0" />
                   <span>Founded</span>
                 </div>
-                <div className="text-5xl font-bold text-accent-foreground">{startup.foundedYear}</div>
+                <div className="text-3xl md:text-4xl font-bold text-accent-foreground">{startup.foundedYear}</div>
               </div>
             </div>
 
             {/* Peer Score */}
-            <div className="row-span-4 mt-3 md:mt-4 flex-shrink-0 border border-glass rounded-xl bg-glass flex p-3 md:p-4 flex-col items-center justify-center md:gap-3 md:py-6">
-              <span className="text-md text-accent-foreground">Peer Score</span>
-              <div className={`flex items-center text-5xl font-bold ${getScoreColor(startup.peerScore)}`}>
+            <div className="row-span-7 mt-3 md:mt-4 flex-shrink-0 border border-glass rounded-xl bg-glass flex p-3 md:p-4 flex-col items-center justify-center md:gap-3 md:py-6">
+              <span className="text-md md:text-lg text-accent-foreground">Peer Score</span>
+              <div className={`flex items-center text-4xl md:text-6xl font-bold ${getScoreColor(startup.peerScore)}`}>
                 {startup.peerScore.toFixed(2)}
                 {startup.peerScore >= 30 ? (
                   <TrendingUp size={18} className="text-emerald-400 ml-1.5 md:ml-2 md:w-7 md:h-7" />

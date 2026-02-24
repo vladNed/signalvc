@@ -9,6 +9,7 @@ export type Startup = {
   countryName: string;
   regionName: string;
   peerScore: number;
+  valuation: number;
 };
 
 export interface PortfolioStartup {

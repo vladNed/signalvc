@@ -8,7 +8,7 @@ import { FeedBackground } from "./components/FeedBackground";
 
 export function FeedPage() {
   return (
-    <div className="h-full text-foreground relative overflow-hidden">
+    <div className="h-full text-foreground relative md:overflow-hidden">
       <FeedBackground />
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}

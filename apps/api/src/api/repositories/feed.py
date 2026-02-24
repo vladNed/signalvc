@@ -30,7 +30,7 @@ class FeedRepository:
                 s.country_name,
                 s.region_name,
                 COALESCE(AVG(isc.score), 0) AS peer_score,
-                MAX(si.current_valuation_usd) as current_valuation
+                MAX(si.current_valuation_usd) as valuation
             FROM startup s
             LEFT JOIN swipe sw
                 ON sw.startup_id = s.id

@@ -57,6 +57,7 @@ class Startup(SchemasBaseModel):
     country_name: str | None
     region_name: str | None
     peer_score: float | None
+    valuation: int
 
 
 class PortfolioStartup(SchemasBaseModel):

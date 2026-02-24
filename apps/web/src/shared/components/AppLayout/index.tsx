@@ -25,7 +25,7 @@ export function AppLayout({
 
   return (
     <div className="flex flex-col h-screen">
-      <nav className="fixed w-full top-0 z-40 backdrop-blur-sm px-4 md:px-16 h-16 grid grid-cols-3">
+      <nav className="fixed  w-full top-0  z-40 backdrop-blur-sm px-4 md:px-16 h-16 grid grid-cols-3">
         <div className="col-span-1 flex items-center ">
           <Link href="/" className="flex items-center gap-0.5">
             <span className="text-2xl font-black text-foreground">Signal</span>
@@ -36,7 +36,7 @@ export function AppLayout({
           <div className="hidden md:flex items-center gap-1">
             <Link href="/feed">
               <Button
-                variant={activeTab === "feed" ? "feed" : "feedInactive"}
+                variant={activeTab === "feed" ? "default" : "ghost"}
                 className={`relative cursor-pointer px-5 ${
                   activeTab === "feed" ? "shadow-[0_0_12px_rgba(97,95,255,0.3)]" : ""
                 }`}
@@ -46,7 +46,7 @@ export function AppLayout({
             </Link>
             <Link href="/portfolio">
               <Button
-                variant={activeTab === "portfolio" ? "feed" : "feedInactive"}
+                variant={activeTab === "portfolio" ? "default" : "ghost"}
                 className={`relative cursor-pointer px-5 ${
                   blurPortfolio || loading ? "blur-sm pointer-events-none" : ""
                 } ${activeTab === "portfolio" ? "shadow-[0_0_12px_rgba(97,95,255,0.3)]" : ""}`}

@@ -9,7 +9,7 @@ export const buttonVariants = cva(
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80",
         outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70",
-        ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
+        ghost: "hover:bg-primary hover:text-primary-foreground active:bg-accent/80",
         link: "text-primary underline-offset-4 hover:underline",
         // Social specific variants
         google: "bg-white text-black border border-gray-300 hover:bg-gray-100 active:bg-gray-200",
