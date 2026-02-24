@@ -1,7 +1,7 @@
 import type { Startup, SwipeType } from "@signalvc/types";
 
 export const feedQueryConfig = {
-  query: () => "/feed" as const,
+  query: () => "/feed/" as const,
   providesTags: (results: Startup[] | undefined) =>
     results
       ? [

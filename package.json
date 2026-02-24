@@ -9,6 +9,9 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test"
   },
+  "dependencies": {
+    "next": "16.1.6"
+  },
   "devDependencies": {
     "@signalvc/prettier-config": "workspace:*",
     "prettier": "^3.3.3",
