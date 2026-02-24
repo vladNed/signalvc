@@ -88,7 +88,7 @@ const config: Config = {
           foreground: "var(--color-text-muted)",
         },
         accent: {
-          DEFAULT: "#1E3A8A",
+          DEFAULT: "#173180",
           foreground: "#a3b3ff",
         },
         destructive: {

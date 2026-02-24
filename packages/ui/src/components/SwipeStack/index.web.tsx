@@ -21,9 +21,9 @@ const MAX_VISIBLE = 4;
 
 const STACK_DEPTH = [
   { scale: 1, y: 0, opacity: 1 },
-  { scale: 0.96, y: 30, opacity: 1 },
-  { scale: 0.92, y: 60, opacity: 0.7 },
-  { scale: 0.88, y: 93, opacity: 0.6 },
+  { scale: 0.96, y: 25, opacity: 1 },
+  { scale: 0.92, y: 52, opacity: 0.7 },
+  { scale: 0.88, y: 83, opacity: 0.4 },
 ];
 
 const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
@@ -76,7 +76,7 @@ const SwipeStack = React.forwardRef<HTMLDivElement, SwipeStackProps>(
     return (
       <div className="flex flex-col  items-center w-full mx-auto h-full">
         <div className="h-full w-full flex items-center justify-center">
-          <div className="relative w-full h-180 ">
+          <div className="relative w-full h-full md:h-200">
             {!hasCards ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-surface-60 backdrop-blur-xl border border-border rounded-2xl p-8 text-center">
                 <div className="text-5xl mb-5">&#x1f389;</div>

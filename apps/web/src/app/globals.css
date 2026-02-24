@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 @source "../../../../packages/ui/src";
 @config "../../../../packages/ui/tailwind.config.ts";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-geist: "Geist", sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -78,8 +79,7 @@ body {
   background: var(--color-page-bg);
   background-image: linear-gradient(to bottom, var(--color-page-bg), var(--color-page-bg-gradient));
   color: var(--color-text-heading);
-  font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
+  font-family: var(--font-geist);
 }
 
 #__next,

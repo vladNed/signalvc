@@ -24,8 +24,8 @@ export function AppLayout({
   const { user, loading } = useAccount();
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <nav className="sticky top-0 z-40 backdrop-blur-xl px-16 h-16 grid grid-cols-3">
+    <div className="flex flex-col h-screen">
+      <nav className="sticky top-0 z-40 backdrop-blur-xl px-4 md:px-16 h-16 grid grid-cols-3">
         <div className="col-span-1 flex items-center ">
           <Link href="/" className="flex items-center gap-0.5">
             <span className="text-2xl font-black text-foreground">Signal</span>
@@ -88,9 +88,9 @@ export function AppLayout({
         </div>
       </nav>
 
-      <main className="flex-1 pb-16 md:pb-0">{children}</main>
+      <main className="h-full">{children}</main>
 
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl bg-nav-mobile border-t border-border">
+      <nav className="md:hidden bottom-0 left-0 right-0 z-40 backdrop-blur-xl bg-nav-mobile border-t border-border">
         <div className="flex items-center justify-around h-16">
           <Link
             href="/feed"
