@@ -38,8 +38,10 @@ app.include_router(feed.router, prefix="/api/v1/feed")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://signalvc-web.vercel.app", "http://localhost:3000"],
     allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
 )
 
 
