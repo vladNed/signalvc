@@ -2,34 +2,38 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "motion/react";
-import { MOCK_PORTFOLIO } from "./consts/mockData";
+import { useFetchPortfolioQuery } from "@/shared/api/portfolioApi";
 import { PortfolioCard } from "./components/PortfolioCard";
 import { PortfolioStats } from "./components/PortfolioStats";
 import { PortfolioHeader } from "./components/PortfolioHeader";
 
 export function PortfolioPage() {
   const [search, setSearch] = useState("");
+  const { data: portfolio = [], isLoading } = useFetchPortfolioQuery();
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return MOCK_PORTFOLIO;
+    if (!search.trim()) return portfolio;
     const query = search.toLowerCase();
-    return MOCK_PORTFOLIO.filter(
+    return portfolio.filter(
       (s) =>
         s.operationalName.toLowerCase().includes(query) ||
         s.targetMarkets.some((m) => m.toLowerCase().includes(query)) ||
-        s.countryName.toLowerCase().includes(query),
+        (s.countryName ?? "").toLowerCase().includes(query),
     );
-  }, [search]);
+  }, [search, portfolio]);
 
   return (
     <div className="h-full text-foreground">
       <div className="py-8 max-w-3xl mx-auto px-4 space-y-6">
         <PortfolioHeader search={search} onSearchChange={setSearch} />
-        <PortfolioStats startups={MOCK_PORTFOLIO} />
+        <PortfolioStats startups={portfolio} />
 
         {/* Card list */}
         <div className="space-y-4">
-          {filtered.map((startup, index) => (
+          {isLoading && (
+            <p className="text-center text-muted-foreground py-12">Loading portfolio…</p>
+          )}
+          {!isLoading && filtered.map((startup, index) => (
             <motion.div
               key={startup.id}
               initial={{ opacity: 0, y: 15 }}
@@ -42,8 +46,12 @@ export function PortfolioPage() {
               />
             </motion.div>
           ))}
-          {filtered.length === 0 && (
-            <p className="text-center text-faint py-12">No startups match your search.</p>
+          {!isLoading && filtered.length === 0 && (
+            <p className="text-center text-faint py-12">
+              {portfolio.length === 0
+                ? "No startups saved yet. Swipe to add some!"
+                : "No startups match your search."}
+            </p>
           )}
         </div>
       </div>

@@ -10,13 +10,14 @@ type PortfolioStatsProps = {
 
 export function PortfolioStats({ startups }: PortfolioStatsProps) {
   const totalSaved = startups.length;
-  const avgSentiment =
+  const avgPeerScore =
     startups.length > 0
-      ? Math.round(startups.reduce((sum, s) => sum + s.sentiment, 0) / startups.length)
-      : 0;
-  const topPerformer = startups.length > 0
-    ? startups.reduce((top, s) => (s.sentiment > top.sentiment ? s : top), startups[0])
-    : null;
+      ? (startups.reduce((sum, s) => sum + s.peerScore, 0) / startups.length).toFixed(1)
+      : "—";
+  const topPerformer =
+    startups.length > 0
+      ? startups.reduce((top, s) => (s.peerScore > top.peerScore ? s : top), startups[0])
+      : null;
 
   const stats = [
     {
@@ -27,9 +28,9 @@ export function PortfolioStats({ startups }: PortfolioStatsProps) {
     },
     {
       icon: TrendingUp,
-      label: "Avg Sentiment",
-      value: `${avgSentiment}%`,
-      accent: avgSentiment >= 70 ? "text-emerald-400" : avgSentiment >= 50 ? "text-yellow-400" : "text-red-400",
+      label: "Avg Peer Score",
+      value: avgPeerScore,
+      accent: "text-emerald-400",
     },
     {
       icon: Star,

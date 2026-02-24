@@ -53,6 +53,35 @@ class FeedRepository:
         records = await self.db_conn.fetch(query, user_id)
         return [schemas.feed.Startup(**dict(record)) for record in records]
 
+    async def fetch_portfolio(self, user_id: str) -> list[schemas.feed.PortfolioStartup]:
+        """Fetch the portfolio (saved startups) for a given user."""
+        query = """
+        SELECT
+          s.id,
+          s.operational_name,
+          s.description,
+          s.business_category,
+          s.target_markets,
+          s.country_name,
+          s.region_name,
+          s.founded_year,
+          s.employee_count,
+          COALESCE(AVG(isc.score), 0) AS peer_score,
+          MAX(si.current_valuation_usd) AS current_valuation
+        FROM swipe sw
+        JOIN startup s
+          ON s.id = sw.startup_id
+        LEFT JOIN startup_investor si
+          ON si.startup_id = sw.startup_id
+        LEFT JOIN investor_score isc
+          ON isc.investor_id = si.investor_id
+        WHERE sw.user_id = $1
+          AND sw.swipe_type = 'portfolio'
+        GROUP BY s.id;
+        """
+        records = await self.db_conn.fetch(query, user_id)
+        return [schemas.feed.PortfolioStartup(**dict(record)) for record in records]
+
     async def create_swipe(self, user_id: str, swipe: schemas.feed.SwipeRequest) -> dict[str, Any]:
         """
         Create a swipe for a user.

@@ -150,6 +150,15 @@ async def get_feed(
     return await repo.fetch_feed(user_id=user_id)
 
 
+@router.get("/portfolio", tags=["feed"], response_model=list[schemas.feed.PortfolioStartup])
+async def get_portfolio(
+    user_id: Annotated[str, fastapi.Depends(deps.get_user)],
+    db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
+):
+    repo = FeedRepository(db_conn)
+    return await repo.fetch_portfolio(user_id=user_id)
+
+
 @router.post("/swipe", tags=["feed"], status_code=204)
 async def swipe_action(
     request: schemas.feed.SwipeRequest,

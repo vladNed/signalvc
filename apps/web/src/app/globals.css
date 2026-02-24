@@ -23,7 +23,9 @@
   --color-text-body: #52525b;
   --color-text-muted: #71717a;
   --color-text-faint: #a1a1aa;
-  --color-glass: #a9bcf049;
+  --color-glass: #e3e8f749;
+  --color-accent: #1E3A8A80;
+  --color-accent-foreground: #6988df;
   --color-skeleton: rgba(228,228,231,0.6);
   --color-skeleton-shimmer: rgba(244,244,245,0.6);
   --color-avatar-fallback: #f4f4f5;
@@ -56,7 +58,9 @@
   --color-text-body: #a3a3a3;
   --color-text-muted: #737373;
   --color-text-faint: #525252;
-  --color-glass: #1e3b8a49;
+  --color-glass: #285ae42a;
+  --color-accent: #1E3A8A80;
+  --color-accent-foreground: #6988df;
   --color-skeleton: rgba(38,38,38,0.6);
   --color-skeleton-shimmer: rgba(64,64,64,0.4);
   --color-avatar-fallback: #171717;
