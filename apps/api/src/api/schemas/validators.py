@@ -6,6 +6,9 @@ logger = logging.getLogger(__name__)
 
 def parse_target_markets(val: str) -> str:
     """Parse target markets from a string to a JSON array to be added to JSONB"""
+    if isinstance(val, list):
+        return val
+
     try:
         return json.loads(val)
     except json.JSONDecodeError:

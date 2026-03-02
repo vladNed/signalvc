@@ -1,3 +1,3 @@
-from . import exceptions, feed
+from . import exceptions, feed, portfolio
 
-__all__ = ["feed", "exceptions"]
+__all__ = ["feed", "exceptions", "portfolio"]

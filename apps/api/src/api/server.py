@@ -6,7 +6,7 @@ from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.conf import settings
-from api.routes import feed
+from api.routes import feed, portfolio
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -35,10 +35,16 @@ app = fastapi.FastAPI(
 )
 
 app.include_router(feed.router, prefix="/api/v1/feed")
+app.include_router(portfolio.router, prefix="/api/v1/portfolio")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://signalvc-web.vercel.app", "http://localhost:3000"],
+    allow_origins=[
+        "https://signalvc-web.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://192.168.1.131:3000"
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,

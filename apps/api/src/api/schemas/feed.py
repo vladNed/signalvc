@@ -57,18 +57,18 @@ class Startup(SchemasBaseModel):
     country_name: str | None
     region_name: str | None
     peer_score: float | None
-    valuation: int
+    arr: int | None
+    founder: str | None
+    funding_size: int | None
 
 
-class PortfolioStartup(SchemasBaseModel):
+class StartupShort(SchemasBaseModel):
     id: UUID
     operational_name: str
     description: str
-    business_category: str
     target_markets: Annotated[list[str], BeforeValidator(validators.parse_target_markets)]
-    country_name: str | None
-    region_name: str | None
-    founded_year: int | None
-    employee_count: int | None
-    peer_score: float
-    current_valuation: float | None
+    business_category: str
+    peer_score: float | None
+    arr: int | None
+    funding_size: int | None
+

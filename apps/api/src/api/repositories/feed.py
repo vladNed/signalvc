@@ -30,7 +30,9 @@ class FeedRepository:
                 s.country_name,
                 s.region_name,
                 COALESCE(AVG(isc.score), 0) AS peer_score,
-                MAX(si.current_valuation_usd) as valuation
+                s.arr,
+                s.founder,
+                s.funding_size
             FROM startup s
             LEFT JOIN swipe sw
                 ON sw.startup_id = s.id
@@ -53,34 +55,62 @@ class FeedRepository:
         records = await self.db_conn.fetch(query, user_id)
         return [schemas.feed.Startup(**dict(record)) for record in records]
 
-    async def fetch_portfolio(self, user_id: str) -> list[schemas.feed.PortfolioStartup]:
+    async def fetch_feed_short(self, user_id: str) -> list[schemas.feed.StartupShort]:
+        query = """
+        WITH filtered AS (
+            SELECT
+                s.id,
+                s.operational_name,
+                s.description,
+                s.target_markets,
+                s.business_category,
+                COALESCE(AVG(isc.score), 0) AS peer_score,
+                s.arr,
+                s.funding_size
+            FROM startup s
+            LEFT JOIN swipe sw
+                ON sw.startup_id = s.id
+                AND sw.user_id = $1
+            LEFT JOIN startup_investor si
+                ON si.startup_id = s.id
+            LEFT JOIN investor_score isc
+                ON isc.investor_id = si.investor_id
+            GROUP BY s.id
+            LIMIT 1000
+        )
+        SELECT *
+        FROM filtered
+        ORDER BY 
+            (0.4 * peer_score + 0.6 * random() * 100) DESC
+        LIMIT 20;
+        """
+
+        records = await self.db_conn.fetch(query, user_id)
+        return [schemas.feed.StartupShort(**dict(record)) for record in records]
+
+    async def fetch_portfolio(self, user_id: str) -> list[schemas.portfolio.Response]:
         """Fetch the portfolio (saved startups) for a given user."""
         query = """
         SELECT
           s.id,
           s.operational_name,
           s.description,
-          s.business_category,
-          s.target_markets,
           s.country_name,
           s.region_name,
           s.founded_year,
-          s.employee_count,
-          COALESCE(AVG(isc.score), 0) AS peer_score,
-          MAX(si.current_valuation_usd) AS current_valuation
+          s.business_category,
+          s.arr,
+          s.founder,
+          s.funding_size
         FROM swipe sw
         JOIN startup s
           ON s.id = sw.startup_id
-        LEFT JOIN startup_investor si
-          ON si.startup_id = sw.startup_id
-        LEFT JOIN investor_score isc
-          ON isc.investor_id = si.investor_id
         WHERE sw.user_id = $1
           AND sw.swipe_type = 'portfolio'
         GROUP BY s.id;
         """
         records = await self.db_conn.fetch(query, user_id)
-        return [schemas.feed.PortfolioStartup(**dict(record)) for record in records]
+        return [schemas.portfolio.Response(**dict(record)) for record in records]
 
     async def create_swipe(self, user_id: str, swipe: schemas.feed.SwipeRequest) -> dict[str, Any]:
         """
@@ -93,59 +123,16 @@ class FeedRepository:
         Raises:
             ValueError: If input validation fails
         """
-        start_time = time.time()
-
         swipe_records = (
             str(user_id),
             str(swipe.startup_id),
             swipe.swipe_type.value,
         )
 
-        async with self.db_conn.transaction():
-            insert_query = """
-                INSERT INTO swipe (user_id, startup_id, swipe_type)
-                VALUES ($1, $2, $3)
-            """
-            await self.db_conn.execute(insert_query, *swipe_records)
-
-            # Upsert swipe statistics: create row when missing, otherwise increment the
-            # appropriate counter column and update `updated_on`.
-            insert_stats_query = """
-                INSERT INTO swipe_stats (
-                    startup_id,
-                    bull_count,
-                    bear_count,
-                    add_count,
-                    created_on,
-                    updated_on
-                )
-                VALUES (
-                    $1,
-                    CASE WHEN $2 = 'bull' THEN 1 ELSE 0 END,
-                    CASE WHEN $2 = 'bear' THEN 1 ELSE 0 END,
-                    CASE WHEN $2 = 'portofolio' THEN 1 ELSE 0 END,
-                    CURRENT_TIMESTAMP,
-                    CURRENT_TIMESTAMP
-                )
-                ON CONFLICT (startup_id) DO UPDATE SET
-                    bull_count = swipe_stats.bull_count + EXCLUDED.bull_count,
-                    bear_count = swipe_stats.bear_count + EXCLUDED.bear_count,
-                    add_count = swipe_stats.add_count + EXCLUDED.add_count,
-                    updated_on = CURRENT_TIMESTAMP;
-            """
-
-            await self.db_conn.execute(
-                insert_stats_query,
-                str(swipe.startup_id),
-                swipe.swipe_type.value,
-            )
-
-        processing_time_ms = (time.time() - start_time) * 1000
-
-        logger.debug(
-            "Processed swipe for user %s in %.2f ms.",
-            user_id,
-            processing_time_ms,
-        )
+        insert_query = """
+            INSERT INTO swipe (user_id, startup_id, swipe_type)
+            VALUES ($1, $2, $3)
+        """
+        await self.db_conn.execute(insert_query, *swipe_records)
 
         return {"success": True}

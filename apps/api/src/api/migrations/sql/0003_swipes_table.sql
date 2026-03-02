@@ -21,6 +21,14 @@ CREATE TABLE IF NOT EXISTS swipe_stats (
     updated_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS swipe (
+    id SERIAL PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES public.profile(id),
+    startup_id UUID NOT NULL REFERENCES public.startup(id),
+    swipe_type swipe_type NOT NULL,
+    created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create index for user_id
 CREATE INDEX IF NOT EXISTS idx_swipe_user_id ON swipe(user_id);
 
