@@ -72,3 +72,9 @@ class StartupShort(SchemasBaseModel):
     arr: int | None
     funding_size: int | None
 
+
+class SwipeAction(SchemasBaseModel):
+    operational_name: str
+    country_name: str | None
+    swipe_type: SwipeType
+

@@ -23,13 +23,22 @@ async def get_feed(
     return await repo.fetch_feed(user_id=user_id)
 
 
-@router.get("/a/", tags=["feed"], response_model=list[schemas.feed.StartupShort])
+@router.get("/a", tags=["feed"], response_model=list[schemas.feed.StartupShort])
 async def get_feed_short(
     user_id: Annotated[str, fastapi.Depends(deps.get_user)],
     db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
 ):
     repo = FeedRepository(db_conn)
     return await repo.fetch_feed_short(user_id=user_id)
+
+
+@router.get("/actions", tags=["feed"], response_model=list[schemas.feed.SwipeAction])
+async def get_latest_actions(
+    user_id: Annotated[str, fastapi.Depends(deps.get_auth_user)],
+    db_conn: Annotated[asyncpg.Connection, fastapi.Depends(deps.get_db)],
+):
+    repo = FeedRepository(db_conn)
+    return await repo.fetch_latest_actions(user_id=user_id)
 
 
 @router.post("/swipe", tags=["feed"], status_code=204)
