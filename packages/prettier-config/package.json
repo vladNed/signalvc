@@ -1,9 +1,0 @@
-{
-  "name": "@signalvc/prettier-config",
-  "version": "0.0.0",
-  "private": true,
-  "main": "index.cjs",
-  "exports": {
-    ".": "./index.cjs"
-  }
-}

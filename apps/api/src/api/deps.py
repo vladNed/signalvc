@@ -4,8 +4,7 @@ from typing import Annotated, Any, AsyncGenerator
 import asyncpg
 import fastapi
 import supabase
-from asyncpg import Pool
-from asyncpg.pool import PoolConnectionProxy
+from asyncpg.pool import Pool, PoolConnectionProxy
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from api.conf import settings
