@@ -6,7 +6,7 @@ from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.conf import settings
-from api.routes import feed, portfolio
+from api.routes import feed, portfolio, profile
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -36,6 +36,7 @@ app = fastapi.FastAPI(
 
 app.include_router(feed.router, prefix="/api/v1/feed")
 app.include_router(portfolio.router, prefix="/api/v1/portfolio")
+app.include_router(profile.router, prefix="/api/v1/profile")
 
 app.add_middleware(
     CORSMiddleware,
