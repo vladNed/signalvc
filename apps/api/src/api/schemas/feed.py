@@ -57,6 +57,7 @@ class Startup(SchemasBaseModel):
     country_name: str | None
     region_name: str | None
     peer_score: float | None
+    sentiment_score: int
     arr: int | None
     founder: str | None
     funding_size: int | None
@@ -69,6 +70,7 @@ class StartupShort(SchemasBaseModel):
     target_markets: Annotated[list[str], BeforeValidator(validators.parse_target_markets)]
     business_category: str
     peer_score: float | None
+    sentiment_score: int
     arr: int | None
     funding_size: int | None
 

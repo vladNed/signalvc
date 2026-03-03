@@ -18,6 +18,7 @@ class Response(SchemasBaseModel):
     arr: int | None
     founder: str | None
     funding_size: int | None
+    sentiment_score: int
 
 
 class SentimentPoint(SchemasBaseModel):
@@ -40,5 +41,6 @@ class StartupDetail(SchemasBaseModel):
     founder: str | None
     funding_size: int | None
     sentiment: int
+    sentiment_score: int
     sentiment_trend: int
     sentiment_over_time: list[SentimentPoint]

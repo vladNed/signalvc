@@ -30,6 +30,11 @@ class FeedRepository:
                 s.country_name,
                 s.region_name,
                 COALESCE(AVG(isc.score), 0) AS peer_score,
+                COALESCE(
+                    ROUND(ss.bull_count::numeric / NULLIF(ss.bull_count + ss.bear_count, 0) * 100),
+                    0
+                )::int AS sentiment_score,
+                COALESCE(ss.bull_count + ss.bear_count, 0) AS engagement,
                 s.arr,
                 s.founder,
                 s.funding_size
@@ -41,15 +46,27 @@ class FeedRepository:
                 ON si.startup_id = s.id
             LEFT JOIN investor_score isc
                 ON isc.investor_id = si.investor_id
-            GROUP BY s.id
+            LEFT JOIN (
+                SELECT
+                    startup_id,
+                    SUM(CASE WHEN swipe_type = 'bull' THEN 1 ELSE 0 END) AS bull_count,
+                    SUM(CASE WHEN swipe_type = 'bear' THEN 1 ELSE 0 END) AS bear_count
+                FROM swipe
+                WHERE created_on >= CURRENT_DATE - INTERVAL '30 days'
+                  AND swipe_type IN ('bull', 'bear')
+                GROUP BY startup_id
+            ) ss ON ss.startup_id = s.id
+            GROUP BY s.id, ss.bull_count, ss.bear_count
             LIMIT 1000
         )
         SELECT *
         FROM filtered
         WHERE founded_year IS NOT NULL
-        ORDER BY 
-            (0.4 * peer_score + 0.6 * random() * 100) DESC
-        LIMIT 20;
+        ORDER BY
+            (0.3 * peer_score
+            + 0.3 * LEAST(COALESCE(engagement, 0), 100)
+            + 0.4 * random() * 100) DESC
+        LIMIT 5;
         """
 
         records = await self.db_conn.fetch(query, user_id)
@@ -65,6 +82,11 @@ class FeedRepository:
                 s.target_markets,
                 s.business_category,
                 COALESCE(AVG(isc.score), 0) AS peer_score,
+                COALESCE(
+                    ROUND(ss.bull_count::numeric / NULLIF(ss.bull_count + ss.bear_count, 0) * 100),
+                    0
+                )::int AS sentiment_score,
+                COALESCE(ss.bull_count + ss.bear_count, 0) AS engagement,
                 s.arr,
                 s.funding_size
             FROM startup s
@@ -75,14 +97,26 @@ class FeedRepository:
                 ON si.startup_id = s.id
             LEFT JOIN investor_score isc
                 ON isc.investor_id = si.investor_id
-            GROUP BY s.id
+            LEFT JOIN (
+                SELECT
+                    startup_id,
+                    SUM(CASE WHEN swipe_type = 'bull' THEN 1 ELSE 0 END) AS bull_count,
+                    SUM(CASE WHEN swipe_type = 'bear' THEN 1 ELSE 0 END) AS bear_count
+                FROM swipe
+                WHERE created_on >= CURRENT_DATE - INTERVAL '30 days'
+                  AND swipe_type IN ('bull', 'bear')
+                GROUP BY startup_id
+            ) ss ON ss.startup_id = s.id
+            GROUP BY s.id, ss.bull_count, ss.bear_count
             LIMIT 1000
         )
         SELECT *
         FROM filtered
-        ORDER BY 
-            (0.4 * peer_score + 0.6 * random() * 100) DESC
-        LIMIT 20;
+        ORDER BY
+            (0.3 * peer_score
+            + 0.3 * LEAST(COALESCE(engagement, 0), 100)
+            + 0.4 * random() * 100) DESC
+        LIMIT 5;
         """
 
         records = await self.db_conn.fetch(query, user_id)
@@ -101,13 +135,28 @@ class FeedRepository:
           s.business_category,
           s.arr,
           s.founder,
-          s.funding_size
+          s.funding_size,
+          COALESCE(
+              ROUND(
+                  SUM(CASE WHEN sw2.swipe_type = 'bull' THEN 1 ELSE 0 END)::numeric
+                  / NULLIF(
+                      SUM(CASE WHEN sw2.swipe_type IN ('bull', 'bear') THEN 1 ELSE 0 END),
+                      0
+                  ) * 100
+              ),
+              0
+          )::int AS sentiment_score
         FROM swipe sw
         JOIN startup s
           ON s.id = sw.startup_id
+        LEFT JOIN swipe sw2
+          ON sw2.startup_id = s.id
+          AND sw2.swipe_type IN ('bull', 'bear')
+          AND sw2.created_on >= CURRENT_DATE - INTERVAL '30 days'
         WHERE sw.user_id = $1
           AND sw.swipe_type = 'portfolio'
-        GROUP BY s.id;
+        GROUP BY s.id
+        ORDER BY sentiment_score DESC;
         """
         records = await self.db_conn.fetch(query, user_id)
         return [schemas.portfolio.Response(**dict(record)) for record in records]
@@ -167,6 +216,12 @@ class FeedRepository:
             value = round(r["bull_count"] / total * 100) if total > 0 else 0
             sentiment_over_time.append({"month": r["month"], "value": value})
 
+        # Sentiment score = 30-day aggregate bull / (bull + bear) * 100
+        total_bull = sum(r["bull_count"] for r in sentiment_records)
+        total_bear = sum(r["bear_count"] for r in sentiment_records)
+        total = total_bull + total_bear
+        sentiment_score = round(total_bull / total * 100) if total > 0 else 0
+
         # Current sentiment = latest day's value
         sentiment = sentiment_over_time[-1]["value"]
 
@@ -176,6 +231,7 @@ class FeedRepository:
         return schemas.portfolio.StartupDetail(
             **dict(record),
             sentiment=sentiment,
+            sentiment_score=sentiment_score,
             sentiment_trend=sentiment_trend,
             sentiment_over_time=sentiment_over_time,
         )
