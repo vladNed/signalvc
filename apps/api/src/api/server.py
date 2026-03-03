@@ -41,10 +41,9 @@ app.include_router(profile.router, prefix="/api/v1/profile")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://signalvc-web.vercel.app",
+        "https://signalvc.vercel.app",
         "http://localhost:3000",
         "http://localhost:5173",
-        "http://192.168.1.131:3000"
     ],
     allow_methods=["*"],
     allow_headers=["*"],
