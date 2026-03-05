@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{ include = "api", from = "src" }]
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.12"
 fastapi = "^0.128.0"
 pydantic-settings = "^2.12.0"
 uvicorn = "^0.40.0"
@@ -26,6 +26,12 @@ ruff = "^0.14.14"
 [tool.poetry.group.cli.dependencies]
 rich = "^14.3.1"
 pandas = "^3.0.0"
+
+[project]
+name = "signalvc-api"
+
+[project.scripts]
+app = "api.server:app"
 
 [build-system]
 requires = ["poetry-core"]
